@@ -32,7 +32,7 @@ The Configurator and SimHub plugin communicate with the host over TCP. There is 
 ## Installation
 
 1. **Download** the latest ZIP from [GitHub Releases](https://github.com/androme13/JIB/releases)
-2. **Extract** the package into your SimHub directory
+2. **Extract** the package and read README.txt
 3. **Launch** `JIB.Service.exe` to start the device host (or install as a Windows service)
 4. **Open** `JIB.Configurator.exe`, connect to the host, and start configuring
 
