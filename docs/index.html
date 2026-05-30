@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JIB Downloads</title>
+    <link rel="icon" href="./icon.png" sizes="any" />
+    <style>
+        :root {
+            --bg: #0F1115;
+            --bg-2: #171A20;
+            --panel: rgba(23, 26, 32, 0.96);
+            --panel-2: rgba(29, 33, 40, 0.96);
+            --panel-3: rgba(35, 40, 50, 0.64);
+            --text: #F3F3F3;
+            --muted: #A0A7B4;
+            --line: rgba(48, 54, 66, 0.55);
+            --line-strong: rgba(240, 79, 79, 0.32);
+            --accent: #f04f4f;
+            --accent-2: #ff8a8a;
+            --accent-3: rgba(240, 79, 79, 0.12);
+            --success: #59db8a;
+            --warning: #ffcf70;
+            --danger: #ff7b7b;
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --maxw: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: radial-gradient(circle at 12% 0%, rgba(240, 79, 79, 0.14), transparent 20%), radial-gradient(circle at 88% 12%, rgba(255, 138, 138, 0.08), transparent 16%), linear-gradient(180deg, #0d0e12 0%, #0F1115 100%);
+            color: var(--text);
+            font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .wrap {
+            width: min(calc(100% - 32px), var(--maxw));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 17, 21, 0.80);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .topbar-inner {
+            width: min(calc(100% - 32px), var(--maxw));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 72px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(180deg, #ff6b6b 0%, #b92323 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 12px 26px rgba(185, 35, 35, 0.28);
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .brand-mark img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 15px;
+            letter-spacing: 0.01em;
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+            .nav a,
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                min-height: 46px;
+                padding: 0 16px;
+                border-radius: 12px;
+                border: 1px solid transparent;
+                font-weight: 700;
+                transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+            }
+
+                .nav a:hover,
+                .btn:hover {
+                    transform: translateY(-1px);
+                }
+
+        .btn-primary {
+            background: linear-gradient(180deg, var(--accent), #b92323);
+            color: white;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .btn-secondary,
+        .nav a {
+            background: rgba(255,255,255,0.02);
+            border-color: var(--line);
+            color: var(--text);
+        }
+
+        .hero {
+            padding: 42px 0 24px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(15,21,31,0.96), rgba(11,16,24,0.96));
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero-main {
+            position: relative;
+            padding: 34px;
+            isolation: isolate;
+        }
+
+            .hero-main::before {
+                content: "";
+                position: absolute;
+                inset: -10% auto auto 58%;
+                width: 320px;
+                height: 320px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(240,79,79,0.14), transparent 66%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+        .hero-heading {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(180px, 290px);
+            gap: 24px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+            .hero-heading h1 {
+                margin-bottom: 0;
+            }
+
+        .hero-logo {
+            width: 100%;
+            max-width: 290px;
+            justify-self: end;
+            filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.38));
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(240,79,79,0.26);
+            background: rgba(240,79,79,0.11);
+            color: var(--accent-2);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        h1 {
+            margin: 18px 0 14px;
+            font-size: clamp(34px, 7vw, 60px);
+            line-height: 0.98;
+            letter-spacing: -0.05em;
+        }
+
+        .hero-copy {
+            margin: 0;
+            max-width: 720px;
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-note {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .stats-card {
+            padding: 20px;
+            display: grid;
+            gap: 16px;
+            align-content: start;
+        }
+
+        .stat {
+            padding: 18px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.014));
+        }
+
+        .stat-label {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            word-break: break-word;
+        }
+
+        .stat-copy {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin: 22px 0;
+        }
+
+        .section-card {
+            padding: 24px;
+        }
+
+        .compat-table-wrap {
+            margin-top: 18px;
+            max-height: 620px;
+            overflow-x: auto;
+            overflow-y: scroll;
+            scrollbar-gutter: stable;
+            scrollbar-color: rgba(240, 79, 79, 0.72) rgba(255,255,255,0.06);
+        }
+
+        .compat-table-wrap thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #1a1d25;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+            .section-head h2 {
+                margin: 0;
+                font-size: 25px;
+                letter-spacing: -0.03em;
+            }
+
+            .section-head p {
+                margin: 6px 0 0;
+                color: var(--muted);
+                line-height: 1.7;
+            }
+
+        .latest-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 18px;
+        }
+
+        .panel {
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.014));
+        }
+
+        .release-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 32px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(89, 219, 138, 0.18);
+            background: rgba(89, 219, 138, 0.08);
+            color: #90f0b4;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .release-title {
+            margin: 14px 0 10px;
+            font-size: 29px;
+            letter-spacing: -0.04em;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .release-body {
+            color: var(--text);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 420px;
+            overflow-y: scroll;
+            padding-right: 8px;
+            scrollbar-gutter: stable;
+            scrollbar-color: rgba(240, 79, 79, 0.72) rgba(255,255,255,0.06);
+        }
+
+        .compat-table-wrap::-webkit-scrollbar,
+        .release-body::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .compat-table-wrap::-webkit-scrollbar-track,
+        .release-body::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 999px;
+        }
+
+        .compat-table-wrap::-webkit-scrollbar-thumb,
+        .release-body::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(255, 138, 138, 0.88), rgba(240, 79, 79, 0.78));
+            border-radius: 999px;
+            border: 2px solid rgba(15, 21, 31, 0.9);
+        }
+
+        .compat-table-wrap::-webkit-scrollbar-thumb:hover,
+        .release-body::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(255, 157, 157, 0.95), rgba(240, 79, 79, 0.9));
+        }
+
+            .release-body:empty::before {
+                content: "No release notes provided.";
+                color: var(--muted);
+            }
+
+        .assets {
+            display: grid;
+            gap: 12px;
+        }
+
+        .asset {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            background: var(--panel-3);
+        }
+
+        .asset-main {
+            min-width: 0;
+        }
+
+        .asset-name {
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .asset-meta {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .mini-card {
+            padding: 18px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012));
+        }
+
+        .step-card {
+            min-height: 190px;
+            display: grid;
+            align-content: start;
+            gap: 12px;
+            position: relative;
+        }
+
+            .step-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                background: linear-gradient(135deg, rgba(240,79,79,0.12), transparent 45%);
+                pointer-events: none;
+            }
+
+        .step-badge {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            color: white;
+            font-weight: 900;
+            background: linear-gradient(180deg, #ff6b6b, #b92323);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 10px 22px rgba(185,35,35,0.24);
+        }
+
+        .step-card h3,
+        .step-card p {
+            position: relative;
+        }
+
+            .mini-card h3 {
+                margin: 0 0 10px;
+                font-size: 17px;
+                letter-spacing: -0.02em;
+            }
+
+            .mini-card p, .mini-card li {
+                color: var(--muted);
+                line-height: 1.7;
+                margin: 0;
+            }
+
+            .mini-card ul {
+                margin: 0;
+                padding-left: 18px;
+            }
+
+        .carousel {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .carousel-stage {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line-strong);
+            background: rgba(0, 0, 0, 0.22);
+        }
+
+        .carousel-image {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            cursor: zoom-in;
+        }
+
+        .carousel-caption {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 16px;
+            border-top: 1px solid var(--line);
+            background: rgba(8, 12, 18, 0.72);
+        }
+
+        .carousel-title {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .carousel-count {
+            flex: 0 0 auto;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(8, 12, 18, 0.72);
+            color: white;
+            font-size: 30px;
+            line-height: 1;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+            .carousel-arrow:hover,
+            .carousel-thumb:hover {
+                border-color: var(--line-strong);
+                background: rgba(240,79,79,0.14);
+            }
+
+        .carousel-prev {
+            left: 14px;
+        }
+
+        .carousel-next {
+            right: 14px;
+        }
+
+        .carousel-thumbs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+        }
+
+        .carousel-thumb {
+            min-width: 0;
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.02);
+            cursor: pointer;
+        }
+
+            .carousel-thumb.active {
+                border-color: var(--accent);
+                background: rgba(240,79,79,0.12);
+            }
+
+            .carousel-thumb img {
+                display: block;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+        .history {
+            display: grid;
+            gap: 14px;
+        }
+
+        .history-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 18px;
+            align-items: center;
+            padding: 16px 18px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        }
+
+        .history-main h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .history-main p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .history-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .empty, .loading, .error {
+            padding: 18px;
+            border-radius: var(--radius-md);
+            line-height: 1.75;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .loading, .empty {
+            color: var(--muted);
+            border: 1px dashed var(--line);
+        }
+
+        .error {
+            color: #ffd9d9;
+            border: 1px solid rgba(255, 123, 123, 0.24);
+            background: rgba(255, 123, 123, 0.08);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+
+        .footer {
+            padding: 6px 0 44px;
+            color: var(--muted);
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+            .footer a {
+                color: var(--accent-2);
+            }
+
+        .zoomable {
+            cursor: zoom-in;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(5, 8, 12, 0.88);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+        }
+
+            .lightbox.open {
+                display: flex;
+            }
+
+            .lightbox img {
+                max-width: min(1400px, 96vw);
+                max-height: 90vh;
+                width: auto;
+                height: auto;
+                border-radius: 18px;
+                border: 1px solid rgba(255,255,255,0.08);
+                box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            }
+
+        .lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 980px) {
+            .hero-grid,
+            .latest-grid,
+            .mini-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .topbar-inner,
+            .brand {
+                align-items: flex-start;
+            }
+
+            .topbar-inner {
+                min-height: auto;
+                padding: 14px 0;
+                flex-direction: column;
+            }
+
+            .hero-main,
+            .section-card {
+                padding: 20px;
+            }
+
+            .history-item {
+                grid-template-columns: 1fr;
+            }
+
+            .history-actions {
+                justify-content: flex-start;
+            }
+
+            .hero-heading {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .hero-logo {
+                max-width: 260px;
+                justify-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="brand-mark">
+                    <img src="icon.png" alt="JIB" />
+                </div>
+                <div class="brand-text">
+                    <strong>JIB Downloads</strong>
+                    <span>SimHub plugin &amp; device host packages for StreamDock hardware</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="#capabilities">Capabilities</a>
+                <a href="#plugins">Plugins</a>
+                <a href="#mapping">Mapping</a>
+                <a href="#compatibility">Compatibility</a>
+                <a href="#latest">Releases</a>
+                <a href="https://github.com/androme13/JIB" target="_blank" rel="noopener">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="hero">
+            <div class="hero-grid">
+                <div class="card hero-main">
+                    <div class="hero-heading">
+                        <div>
+                            <div class="eyebrow">Official packaged downloads</div>
+                            <h1>Download JIB releases</h1>
+                        </div>
+                        <img class="hero-logo" src="logo.png" alt="JIB SimHub" />
+                    </div>
+                    <p class="hero-copy">
+                        JIB (Jack In the Box) is a SimHub plugin and device host for StreamDock-compatible hardware.
+                        This page is dedicated to packaged release downloads only.
+                        Source code archives are not listed here &mdash; users see the ZIP files attached to your GitHub releases.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" id="heroDownloadBtn" href="#latest">Latest release</a>
+                        <a class="btn btn-secondary" href="https://github.com/androme13/JIB/releases" target="_blank" rel="noopener">Open releases on GitHub</a>
+                    </div>
+                    <div class="hero-note">
+                        Publish a new GitHub release, attach your plugin ZIP, and this page updates automatically.
+                    </div>
+                </div>
+
+                <aside class="card stats-card">
+                    <div class="stat">
+                        <div class="stat-label">Repository</div>
+                        <div class="stat-value mono">androme13/JIB</div>
+                        <div class="stat-copy">Public release feed used for this download page.</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Published releases</div>
+                        <div class="stat-value" id="releaseCount">-</div>
+                        <div class="stat-copy">Draft releases are ignored until published.</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Latest version</div>
+                        <div class="stat-value" id="latestVersionStat">Not published yet</div>
+                        <div class="stat-copy">Shown as soon as the first public release is available.</div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" id="capabilities">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div><h2>What you can do with JIB</h2></div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card">
+                        <h3>Live telemetry display</h3>
+                        <p>Render real-time SimHub telemetry (speed, RPM, gear, temperatures, flags, trucking data) on StreamDock LCD keys as JPEG frames at ~20 FPS.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Physical controls &amp; dispatch</h3>
+                        <p>Map hardware buttons, knobs, and touch zones to keyboard keys, mouse actions, vJoy axes, media controls, SimHub Control Mapper roles, and system commands.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Multi-page touch navigation</h3>
+                        <p>Create multiple main pages with nested touch pages on touchscreen devices. Swipe left/right to navigate between pages, with full CRUD from the Configurator.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Plugin ecosystem</h3>
+                        <p>Six built-in plugins provide SimHub telemetry, keyboard output, mouse control, vJoy virtual joystick, media transport, and system monitoring &mdash; with an SDK for third-party extensions.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>LED &amp; brightness control</h3>
+                        <p>Control global and per-key RGB LEDs, panel brightness, animated GIF backgrounds, and knob LED rings &mdash; resolved per-device via SDK or native HID transport.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Profiles &amp; workspaces</h3>
+                        <p>Vehicle-aware profiles with learned telemetry min/max values, per-profile mapping overrides, and composite workspace save/load with atomic consistency.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="plugins">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Built-in plugins</h2>
+                        <p>Each plugin exposes assignable functions and dispatch targets for hardware controls.</p>
+                    </div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card">
+                        <h3>SimHub</h3>
+                        <p>Live telemetry from any racing simulator. Speed, RPM, gear, fuel, temperatures, driver aids, flags. Also exposes SimHub Control Mapper roles and event triggers for bidirectional control.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Keyboard</h3>
+                        <p>Map any button to a keyboard key or hotkey combination. Supports Press/Release dispatch for held actions (push-to-talk, modifier keys).</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Mouse</h3>
+                        <p>Left/right/middle clicks, double-click, scroll up/down, relative and absolute cursor movement. Configurable sensitivity and scroll speed.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>vJoy</h3>
+                        <p>Virtual joystick output via vJoy driver. 128 buttons and 8 axes per device. Press/Release or PulseOnly dispatch for held/instant actions.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Media</h3>
+                        <p>Play/Pause, next/previous track, volume up/down, mute. Per-application audio discovery creates individual volume controls for every active audio app.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>System</h3>
+                        <p>CPU, RAM, GPU, network throughput, battery, and uptime telemetry gauges. System commands: shutdown, restart, sleep, hibernate, lock, brightness, monitor off.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="mapping">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>How mapping works</h2>
+                        <p>Every hardware control can be assigned to any function exposed by a plugin.</p>
+                    </div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card step-card">
+                        <div class="step-badge">1</div>
+                        <h3>Choose a source</h3>
+                        <p>Select a plugin provider and one of its assignable functions &mdash; telemetry gauge, keyboard key, SimHub role, media command, or system action.</p>
+                    </div>
+                    <div class="mini-card step-card">
+                        <div class="step-badge">2</div>
+                        <h3>Pick a dispatch mode</h3>
+                        <p><strong>Press / Release</strong> for held actions (hotkeys, vJoy buttons). <strong>PulseOnly</strong> for instant triggers (page navigation, mute, system commands).</p>
+                    </div>
+                    <div class="mini-card step-card">
+                        <div class="step-badge">3</div>
+                        <h3>Assign to a hardware control</h3>
+                        <p>Bind the mapping to a physical button, knob turn/press, touch zone, or swipe gesture. Configurator preview shows the result in real time.</p>
+                    </div>
+                </div>
+                <div style="margin-top:18px; display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+                    <div class="panel" style="padding:16px;">
+                        <div class="stat-label" style="margin-bottom:8px;">Dispatch modes</div>
+                        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.7;">Two execution modes per mapping: <strong>Press / Release</strong> for signals that need a held state, and <strong>PulseOnly</strong> for one-shot triggers. Auto-mode picks the plugin-recommended default.</p>
+                    </div>
+                    <div class="panel" style="padding:16px;">
+                        <div class="stat-label" style="margin-bottom:8px;">Touch pages &amp; swipe</div>
+                        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.7;">Touchscreen devices support multiple main pages, each with nested touch pages. Swipe gestures navigate between them. A &ldquo;home&rdquo; page anchors the default view.</p>
+                    </div>
+                    <div class="panel" style="padding:16px;">
+                        <div class="stat-label" style="margin-bottom:8px;">Rendering pipeline</div>
+                        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.7;">SkiaSharp CPU raster at ~20 FPS. Delta hashing avoids re-rendering unchanged frames. Configurator preview and device output share the same renderer and cache.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 style="text-align:center; margin:0 0 6px; font-size:22px; letter-spacing:-0.03em;">Get started in three steps</h2>
+            <p style="text-align:center; margin:0 0 18px; color:var(--muted);">Install JIB, connect your StreamDock, and start mapping.</p>
+            <div class="mini-grid">
+                <div class="mini-card step-card">
+                    <div class="step-badge">1</div>
+                    <h3>Download the latest ZIP</h3>
+                    <p>Get the packaged JIB plugin archive from the latest GitHub release below.</p>
+                </div>
+                <div class="mini-card step-card">
+                    <div class="step-badge">2</div>
+                    <h3>Install &amp; launch the host</h3>
+                    <p>Extract the package, place the plugin files in SimHub, then launch JIB.Service. The host manages all hardware, rendering, and plugin execution.</p>
+                </div>
+                <div class="mini-card step-card">
+                    <div class="step-badge">3</div>
+                    <h3>Configure your device</h3>
+                    <p>Open the JIB Configurator, connect to the host, and visually edit button layouts, mappings, touch pages, and profiles for each connected device.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="preview">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Plugin preview</h2>
+                        <p>A quick visual overview of the JIB plugin interface, features, and workflow.</p>
+                    </div>
+                </div>
+                <div class="carousel" id="mediaCarousel"></div>
+            </div>
+        </section>
+
+        <section class="section" id="compatibility">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Hardware compatibility</h2>
+                        <p>Compatibility is tracked by family and model so users can immediately see the current validation level for their device.</p>
+                    </div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card">
+                        <h3>How to read this page</h3>
+                        <ul>
+                            <li><strong>Full support</strong>: validated in normal use and recommended for end users</li>
+                            <li><strong>Partial support</strong>: usable, but some features or behaviours still need validation</li>
+                            <li><strong>Experimental</strong>: native driver registered, not yet validated end to end</li>
+                            <li><strong>Unknown</strong>: not yet tested or not enough feedback available</li>
+                        </ul>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Recognised brands</h3>
+                        <ul>
+                            <li>MiraBox</li>
+                            <li>Ajazz</li>
+                            <li>FHOOU</li>
+                            <li>Soomfon</li>
+                            <li>Mars Gaming</li>
+                            <li>TreasLin &middot; Redragon &middot; Maddog &middot; Risemode &middot; TMICE &middot; VSD</li>
+                        </ul>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Important notes</h3>
+                        <ul>
+                            <li>Actual behaviour may vary depending on firmware version, hardware revision, and Windows environment</li>
+                            <li>Direct USB HID access can behave differently across seemingly similar models</li>
+                            <li>Simultaneous active control with the vendor application is not officially guaranteed</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compat-table-wrap">
+                    <table style="width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); color:var(--text);">Brand</th>
+                                <th style="text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); color:var(--text);">Model</th>
+                                <th style="text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); color:var(--text);">Status</th>
+                                <th style="text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); color:var(--text);">Coverage</th>
+                                <th style="text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); color:var(--text);">Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">3&times;2 keys &middot; 3 knobs &middot; 3 aux buttons &middot; native brightness</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP03 / AKP03E / AKP03R</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Soomfon</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Controller SE</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Mars Gaming</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MSD-TWO</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">TreasLin</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Redragon</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Skyrider SS-551</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293 V2 / V3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 screens &middot; key GIF</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">FHOOU</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Rebrand of MiraBox 293S (same VID:PID 5548:6670)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP153 / AKP153E / AKP153R</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Mars Gaming</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MSD-ONE</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">293S rebrand</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Maddog</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">GK150K</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Risemode</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Vision 01</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">TMICE</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Controller</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Soomfon</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">XF-CN001</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N1</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN1</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 screens &middot; 1 knob &middot; 2 aux buttons</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">VSD</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N1</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN1</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Hardware validation still in progress</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N4 / N4 E</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;2 keys &middot; 1 screen &middot; 4 knobs &middot; touch/swipe &middot; native brightness</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP05E</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Non-Pro family</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N4 Pro / N4 Pro E</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4 Pro</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;2 keys &middot; 1 screen &middot; 4 knobs &middot; touch/swipe &middot; knob LED rings &middot; native brightness</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP05E PRO</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4 Pro</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Pro family &middot; knob LED rings &middot; vibration</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">M18 / M18E</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDM18</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 aux buttons &middot; Key + BG GIF</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">M3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDM3</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 knobs &middot; Key + BG GIF</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">XL / XLE</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted); font-weight:800;">Experimental</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDXL</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">8&times;4 keys &middot; Key + BG GIF &middot; pending end-to-end validation</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px;">MiraBox</td>
+                                <td style="padding:14px 16px;">K1 Pro / K1 Pro EU</td>
+                                <td style="padding:14px 16px; color:var(--muted); font-weight:800;">Experimental</td>
+                                <td style="padding:14px 16px; color:var(--muted);">K1Pro</td>
+                                <td style="padding:14px 16px; color:var(--muted);">3&times;2 keys &middot; 3 knobs &middot; Key GIF &middot; pending end-to-end validation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="latest">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Latest release</h2>
+                        <p>The newest public JIB package published on GitHub.</p>
+                    </div>
+                </div>
+                <div id="latestContent" class="loading">Loading release information&hellip;</div>
+            </div>
+        </section>
+
+        <section class="section" id="history">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Release history</h2>
+                        <p>Older packaged versions remain available here once published.</p>
+                    </div>
+                </div>
+                <div id="historyContent" class="loading">Loading release history&hellip;</div>
+            </div>
+        </section>
+    </main>
+
+    <div class="wrap footer">
+        JIB download center powered by GitHub Releases &middot; <a href="https://github.com/androme13/JIB" target="_blank" rel="noopener">Repository</a>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" type="button" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImage" src="" alt="Zoomed screenshot" onclick="event.stopPropagation()" />
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightboxImage').src = src;
+            document.getElementById('lightbox').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.getElementById('lightboxImage').src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+
+    <script>
+        const owner = 'androme13';
+        const repo = 'JIB';
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases`;
+
+        const latestContent = document.getElementById('latestContent');
+        const historyContent = document.getElementById('historyContent');
+        const releaseCount = document.getElementById('releaseCount');
+        const latestVersionStat = document.getElementById('latestVersionStat');
+        const heroDownloadBtn = document.getElementById('heroDownloadBtn');
+        const mediaCarousel = document.getElementById('mediaCarousel');
+        const mediaFiles = [
+            'medias/Infos tab 1.png',
+            'medias/Control tab 1.png',
+            'medias/Control tab 2.png',
+            'medias/Display tab 1.png',
+            'medias/Devices Tab 1.png',
+            'medias/Debug tab 1.png'
+        ];
+        let activeMediaIndex = 0;
+
+        function escapeHtml(str = '') {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function titleFromMediaPath(path) {
+            const fileName = String(path).split('/').pop() || '';
+            const baseName = fileName.replace(/\.[^.]+$/, '');
+            return baseName
+                .replace(/[_-]+/g, ' ')
+                .replace(/([a-z])([0-9])/gi, '$1 $2')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .replace(/\b\w/g, char => char.toUpperCase()) || 'Preview';
+        }
+
+        function showMedia(index) {
+            if (!mediaFiles.length) return;
+            activeMediaIndex = (index + mediaFiles.length) % mediaFiles.length;
+            renderMediaCarousel();
+        }
+
+        function renderMediaCarousel() {
+            if (!mediaCarousel) return;
+            if (!mediaFiles.length) {
+                mediaCarousel.innerHTML = '<div class="empty">No preview images are available yet.</div>';
+                return;
+            }
+
+            const current = mediaFiles[activeMediaIndex];
+            const title = titleFromMediaPath(current);
+            mediaCarousel.innerHTML = `
+            <div class="carousel-stage">
+                <img class="carousel-image" src="${current}" alt="${escapeHtml(title)}" onclick="openLightbox(this.src)" />
+                <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous image" onclick="showMedia(${activeMediaIndex - 1})">&lsaquo;</button>
+                <button class="carousel-arrow carousel-next" type="button" aria-label="Next image" onclick="showMedia(${activeMediaIndex + 1})">&rsaquo;</button>
+                <div class="carousel-caption">
+                    <h3 class="carousel-title">${escapeHtml(title)}</h3>
+                    <div class="carousel-count">${activeMediaIndex + 1} / ${mediaFiles.length}</div>
+                </div>
+            </div>
+            <div class="carousel-thumbs">
+                ${mediaFiles.map((file, index) => `
+                <button class="carousel-thumb ${index === activeMediaIndex ? 'active' : ''}" type="button" aria-label="Show ${escapeHtml(titleFromMediaPath(file))}" onclick="showMedia(${index})">
+                    <img src="${file}" alt="${escapeHtml(titleFromMediaPath(file))}" />
+                </button>
+                `).join('')}
+            </div>
+            `;
+        }
+
+        function formatDate(value) {
+            if (!value) return 'Unknown date';
+            try {
+                return new Date(value).toLocaleString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return value;
+            }
+        }
+
+        function formatSize(bytes = 0) {
+            if (!bytes) return 'Unknown size';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let index = 0;
+            while (size >= 1024 && index < units.length - 1) {
+                size /= 1024;
+                index += 1;
+            }
+            return `${size.toFixed(size >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+        }
+
+        function getReleaseTitle(release) {
+            return release.name?.trim() || release.tag_name || 'Untitled release';
+        }
+
+        function getAssets(release) {
+            return (release.assets || []).filter(asset => {
+                if (!asset?.browser_download_url) return false;
+                const lower = String(asset.name || '').toLowerCase();
+                return lower.endsWith('.zip') || lower.endsWith('.7z') || lower.endsWith('.rar') || lower.endsWith('.msi') || lower.endsWith('.exe');
+            });
+        }
+
+        function getPrimaryAsset(release) {
+            const assets = getAssets(release);
+            const zip = assets.find(asset => String(asset.name || '').toLowerCase().endsWith('.zip'));
+            return zip || assets[0] || null;
+        }
+
+        function getReleaseDownloadCount(release) {
+            return getAssets(release).reduce((total, asset) => total + Number(asset.download_count || 0), 0);
+        }
+
+        function formatDownloadCount(count) {
+            const value = Number(count || 0);
+            return `${value.toLocaleString()} ${value === 1 ? 'download' : 'downloads'}`;
+        }
+
+        function buildAssetsHtml(release) {
+            const assets = getAssets(release);
+            if (!assets.length) {
+                return `<div class="empty">No packaged downloadable asset is attached to this release yet. Attach your plugin ZIP in the GitHub release assets and it will appear here automatically.</div>`;
+            }
+
+            return `<div class="assets">${assets.map(asset => `
+            <div class="asset">
+                <div class="asset-main">
+                    <div class="asset-name">${escapeHtml(asset.name)}</div>
+                    <div class="asset-meta">${formatSize(asset.size)} &middot; ${asset.download_count ?? 0} downloads</div>
+                </div>
+                <a class="btn btn-primary" href="${asset.browser_download_url}" target="_blank" rel="noopener">Download</a>
+            </div>
+            `).join('')}</div>`;
+        }
+
+        function buildLatestHtml(release) {
+            return `
+            <div class="latest-grid">
+                <div class="panel">
+                    <div class="release-badge">Latest</div>
+                    <div class="release-title">${escapeHtml(getReleaseTitle(release))}</div>
+                    <div class="meta">
+                        <span><strong>Tag:</strong> ${escapeHtml(release.tag_name || 'N/A')}</span>
+                        <span><strong>Published:</strong> ${escapeHtml(formatDate(release.published_at))}</span>
+                        <span><strong>Status:</strong> ${release.prerelease ? 'Pre-release' : 'Stable release'}</span>
+                        <span><strong>Downloads:</strong> ${escapeHtml(formatDownloadCount(getReleaseDownloadCount(release)))}</span>
+                    </div>
+                    <div class="release-body">${escapeHtml(release.body || '')}</div>
+                </div>
+                <div class="panel">
+                    <h3 style="margin:0 0 14px; font-size:20px; letter-spacing:-0.02em;">Download assets</h3>
+                    ${buildAssetsHtml(release)}
+                </div>
+            </div>
+            `;
+        }
+
+        function buildHistoryItem(release) {
+            const assets = getAssets(release);
+            const actions = assets.length
+                ? assets.map(asset => `<a class="btn btn-secondary" href="${asset.browser_download_url}" target="_blank" rel="noopener">${escapeHtml(asset.name)}</a>`).join('')
+                : `<span class="btn btn-secondary" style="cursor: default; opacity: 0.75;">No packaged asset</span>`;
+
+            return `
+            <div class="history-item">
+                <div class="history-main">
+                    <h3>${escapeHtml(getReleaseTitle(release))}</h3>
+                    <p><strong>${escapeHtml(release.tag_name || 'N/A')}</strong> &middot; ${escapeHtml(formatDate(release.published_at))} &middot; ${release.prerelease ? 'Pre-release' : 'Release'} &middot; ${escapeHtml(formatDownloadCount(getReleaseDownloadCount(release)))}</p>
+                </div>
+                <div class="history-actions">${actions}</div>
+            </div>
+            `;
+        }
+
+        async function loadReleases() {
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Accept': 'application/vnd.github+json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`GitHub API returned ${response.status}`);
+                }
+
+                const json = await response.json();
+                const releases = Array.isArray(json) ? json.filter(r => !r.draft) : [];
+
+                releaseCount.textContent = String(releases.length);
+
+                if (!releases.length) {
+                    latestVersionStat.textContent = 'Not published yet';
+                    latestContent.innerHTML = `<div class="empty">No public release has been published for <span class="mono">${owner}/${repo}</span> yet. As soon as the first release is published with a plugin ZIP attached, this page will populate automatically.</div>`;
+                    historyContent.innerHTML = `<div class="empty">Release history will appear here after the first published release.</div>`;
+                    heroDownloadBtn.removeAttribute('href');
+                    heroDownloadBtn.style.pointerEvents = 'none';
+                    heroDownloadBtn.style.opacity = '0.65';
+                    return;
+                }
+
+                const latest = releases[0];
+                latestVersionStat.textContent = latest.tag_name || getReleaseTitle(latest);
+                latestContent.innerHTML = buildLatestHtml(latest);
+
+                const primary = getPrimaryAsset(latest);
+                if (primary) {
+                    heroDownloadBtn.href = primary.browser_download_url;
+                    heroDownloadBtn.textContent = 'Download latest ZIP';
+                }
+
+                const older = releases.slice(1);
+                historyContent.innerHTML = older.length
+                    ? `<div class="history">${older.map(buildHistoryItem).join('')}</div>`
+                    : `<div class="empty">Only one public release is available at the moment.</div>`;
+            } catch (error) {
+                console.error(error);
+                latestContent.innerHTML = `<div class="error">Unable to retrieve release data from GitHub right now.</div>`;
+                historyContent.innerHTML = `<div class="error">Unable to retrieve release history from GitHub right now.</div>`;
+                releaseCount.textContent = '\u2014';
+                latestVersionStat.textContent = 'Unavailable';
+            }
+        }
+
+        renderMediaCarousel();
+        loadReleases();
+    </script>
+</body>
+</html>
