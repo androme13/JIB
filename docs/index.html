@@ -862,7 +862,7 @@
                     </div>
                     <div class="mini-card">
                         <h3>Plugin ecosystem</h3>
-                        <p>Six built-in plugins provide SimHub telemetry, keyboard output, mouse control, vJoy virtual joystick, media transport, and system monitoring &mdash; with an SDK for third-party extensions.</p>
+                        <p>Eight built-in plugins provide SimHub telemetry, OBS Studio control, HTTP webhooks, keyboard output, mouse control, vJoy virtual joystick, media transport, and system monitoring &mdash; with an SDK for third-party extensions.</p>
                     </div>
                     <div class="mini-card">
                         <h3>LED &amp; brightness control</h3>
@@ -909,6 +909,14 @@
                         <h3>System</h3>
                         <p>CPU, RAM, GPU, network throughput, battery, and uptime telemetry gauges. System commands: shutdown, restart, sleep, hibernate, lock, brightness, monitor off.</p>
                     </div>
+                    <div class="mini-card">
+                        <h3>OBS Studio</h3>
+                        <p>Control OBS via WebSocket v5: toggle stream/recording/replay/virtual camera, switch scenes, toggle source visibility. Live stream and recording status displayed on buttons.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>HTTP / Webhook</h3>
+                        <p>Send HTTP requests on button press. Configure up to 10 endpoints with custom URL, method (GET/POST/PUT/PATCH/DELETE), JSON headers, and body. Status code rendered on the button.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -925,7 +933,7 @@
                     <div class="mini-card step-card">
                         <div class="step-badge">1</div>
                         <h3>Choose a source</h3>
-                        <p>Select a plugin provider and one of its assignable functions &mdash; telemetry gauge, keyboard key, SimHub role, media command, or system action.</p>
+                        <p>Select a plugin provider and one of its assignable functions &mdash; telemetry gauge, keyboard key, SimHub role, OBS action, HTTP webhook, media command, or system action.</p>
                     </div>
                     <div class="mini-card step-card">
                         <div class="step-badge">2</div>
