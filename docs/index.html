@@ -783,7 +783,7 @@
                 </div>
                 <div class="brand-text">
                     <strong>JIB Downloads</strong>
-                    <span>SimHub plugin &amp; device host packages for StreamDock hardware</span>
+                    <span>SimHub plugin &amp; device host packages for StreamDock &amp; Elgato Stream Deck hardware</span>
                 </div>
             </div>
             <nav class="nav">
@@ -809,7 +809,7 @@
                         <img class="hero-logo" src="logo.png" alt="JIB SimHub" />
                     </div>
                     <p class="hero-copy">
-                        JIB (Jack In the Box) is a SimHub plugin and device host for StreamDock-compatible hardware.
+                        JIB (Jack In the Box) is a SimHub plugin and device host for StreamDock-compatible and Elgato Stream Deck hardware.
                         This page is dedicated to packaged release downloads only.
                         Source code archives are not listed here &mdash; users see the ZIP files attached to your GitHub releases.
                     </p>
@@ -1018,6 +1018,7 @@
                     <div class="mini-card">
                         <h3>Recognised brands</h3>
                         <ul>
+                            <li>Elgato</li>
                             <li>MiraBox</li>
                             <li>Ajazz</li>
                             <li>FHOOU</li>
@@ -1032,6 +1033,7 @@
                             <li>Actual behaviour may vary depending on firmware version, hardware revision, and Windows environment</li>
                             <li>Direct USB HID access can behave differently across seemingly similar models</li>
                             <li>Simultaneous active control with the vendor application is not officially guaranteed</li>
+                            <li><strong>Elgato Stream Deck:</strong> the official Stream Deck software must be closed (it monopolises the HID device). The first-gen Stream Deck Mini (BMP format) and the 2017 Stream Deck (PID 0x0060) are not supported yet.</li>
                         </ul>
                     </div>
                 </div>
@@ -1222,6 +1224,44 @@
                                 <td style="padding:14px 16px; color:var(--muted); font-weight:800;">Experimental</td>
                                 <td style="padding:14px 16px; color:var(--muted);">K1Pro</td>
                                 <td style="padding:14px 16px; color:var(--muted);">3&times;2 keys &middot; 3 knobs &middot; Key GIF &middot; pending end-to-end validation</td>
+                            </tr>
+                            <tr style="border-top:2px solid rgba(240,79,79,0.28);">
+                                <td colspan="5" style="padding:14px 16px; color:var(--accent-2); font-weight:700; font-size:1.02em;">Elgato Stream Deck &mdash; new hardware plugin (untested, initial development)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck Classic / Mk.2 / Module 15</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDClassic</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys (72&times;72) &middot; 480&times;272 LCD &middot; JPEG &middot; rotation 180&deg;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck XL / Module 32</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDDXL</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">8&times;4 keys (96&times;96) &middot; 1024&times;600 LCD &middot; JPEG &middot; rotation 180&deg;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck Neo</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDNEO</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">4&times;2 keys (96&times;96) + 2 sensors &middot; 480&times;320 LCD + 248&times;58 window &middot; JPEG &middot; rotation 180&deg;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck +</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDPLUS</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">4&times;2 keys (120&times;120) + 4 encoders &middot; 800&times;480 LCD + touch window 800&times;100 &middot; JPEG &middot; no rotation</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:14px 16px;">Elgato</td>
+                                <td style="padding:14px 16px;">Stream Deck + XL</td>
+                                <td style="padding:14px 16px; color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; color:var(--muted);">SDPLUSXL</td>
+                                <td style="padding:14px 16px; color:var(--muted);">9&times;4 keys (112&times;112) + 6 encoders &middot; 1280&times;800 LCD + touch window 1200&times;100 &middot; JPEG &middot; rotation 270&deg;</td>
                             </tr>
                         </tbody>
                     </table>
