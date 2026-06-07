@@ -1,8 +1,8 @@
 # JIB — Jack In the Box
 
-**SimHub plugin & device host for StreamDock-compatible hardware.**
+**SimHub plugin & device host for StreamDock and Stream Deck hardware.**
 
-JIB bridges SimHub telemetry with StreamDock LCD button boxes. Render live data on hardware keys, map physical controls to any action (keyboard, mouse, vJoy, media, system), manage multi-page touch layouts, and control LEDs — all from a native Windows Configurator.
+JIB bridges SimHub telemetry with StreamDock and Stream Deck LCD button boxes. Render live data on hardware keys, map physical controls to any action (keyboard, mouse, vJoy, media, system), manage multi-page touch layouts, and control LEDs — all from a native Windows Configurator.
 
 ---
 
@@ -42,7 +42,7 @@ The Configurator and SimHub plugin communicate with the host over TCP. There is 
 
 ### Live telemetry display
 
-Real-time SimHub telemetry rendered as JPEG frames on StreamDock LCD keys. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
+Real-time SimHub telemetry rendered as JPEG frames on device LCD keys. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
 
 **Supported telemetry categories:** speed, RPM, gear, fuel, water/oil temperatures, turbo pressure, ERS, DRS, ABS, TC, brake bias, headlights, wipers, flags, cruise control, parking brake, retarder, diff lock, navigation, trucking data, and more.
 
