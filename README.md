@@ -15,8 +15,8 @@ SimHub.exe
 JIB.Configurator.exe (WinUI 3) ───┤ TCP (port 16550, 4-byte length-prefix JSON)
                                   │
 JIB.Service.exe (Windows host) ───┘
-  ├── Plugins: SimHub, Keyboard, Mouse, vJoy, Media, System
-  ├── SkiaSharp rendering (~20 FPS CPU raster → JPEG)
+  ├── Plugins: SimHub, OBS, HTTP, Keyboard, Mouse, vJoy, Media, System Monitor, System Commands
+  ├── SkiaSharp rendering (real-time CPU raster → JPEG)
   └── StreamDockNative.dll (C++ USB HID + SDK passthrough)
 ```
 
@@ -32,7 +32,7 @@ The Configurator and SimHub plugin communicate with the host over TCP. There is 
 ## Installation
 
 1. **Download** the latest ZIP from [GitHub Releases](https://github.com/androme13/JIB/releases)
-2. **Extract** the package and read README.txt
+2. **Extract** the package into your SimHub directory
 3. **Launch** `JIB.Service.exe` to start the device host (or install as a Windows service)
 4. **Open** `JIB.Configurator.exe`, connect to the host, and start configuring
 
@@ -42,7 +42,7 @@ The Configurator and SimHub plugin communicate with the host over TCP. There is 
 
 ### Live telemetry display
 
-Real-time SimHub telemetry rendered as JPEG frames on StreamDock LCD keys at ~20 FPS. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
+Real-time SimHub telemetry rendered as JPEG frames on StreamDock LCD keys. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
 
 **Supported telemetry categories:** speed, RPM, gear, fuel, water/oil temperatures, turbo pressure, ERS, DRS, ABS, TC, brake bias, headlights, wipers, flags, cruise control, parking brake, retarder, diff lock, navigation, trucking data, and more.
 
@@ -53,6 +53,8 @@ Every hardware button, knob turn/press, touch zone, and swipe gesture can be map
 | Category | Examples |
 |---|---|
 | **SimHub Control Mapper** | Custom roles defined in SimHub |
+| **OBS Studio** | Stream, record, scenes, sources, virtual camera |
+| **HTTP / Webhook** | GET/POST/PUT/PATCH/DELETE to any URL |
 | **Keyboard** | Any key or hotkey combination |
 | **Mouse** | Click, double-click, scroll, move |
 | **vJoy** | Virtual joystick buttons (128) and axes (8) |
@@ -82,7 +84,7 @@ Feature transport (SDK vs. native HID) is resolved per device model, not via a g
 
 ### Plugin system
 
-JIB loads plugins from `Plugins/` at startup. Six built-in plugins are included. Third-party plugins can be authored against the `JIB.Sdk` package.
+JIB loads plugins from `Plugins/` at startup. Nine built-in plugins are included. Third-party plugins can be authored against the `JIB.Sdk` library.
 
 Plugins have:
 - Typed settings (TextBox, Toggle, NumberBox, ComboBox, Endpoint)
@@ -109,8 +111,17 @@ Virtual joystick output via the vJoy driver. Auto-discovers configured vJoy devi
 ### Media
 Multimedia transport: Play/Pause, Next Track, Previous Track. Volume Up, Volume Down, Mute. Per-application audio discovery dynamically creates individual volume controls for every active audio application. Master volume level exposed as a renderable gauge (0–100 %).
 
-### System
-System resource telemetry gauges: CPU Usage, RAM, GPU (usage, VRAM, temperature), network throughput, uptime, battery level. System commands: shutdown, restart, sleep, hibernate, lock, brightness up/down, monitor off.
+### System Monitor
+System resource telemetry gauges: CPU usage, RAM, GPU (usage, VRAM, temperature), network throughput, uptime, battery level. Configurable refresh interval (1–60 s). All metrics exposed as renderable gauges and assignable display functions.
+
+### System Commands
+System-level operations dispatched from any button: Shutdown, Restart, Sleep, Hibernate, Lock, Brightness Up/Down, Monitor Off. Also supports per-card program launch — map any button to launch an executable with custom arguments, working directory, and window visibility, configured via the mapping metadata.
+
+### OBS Studio
+Control OBS Studio via WebSocket v5. 8 built-in actions: toggle stream, record toggle/pause/resume, replay buffer toggle/save, virtual camera toggle, screenshot. Dynamic scene switching and source visibility toggling. Live telemetry: stream status (LIVE/OFF), recording status (REC/PAUSE/OFF), and current scene name displayed on buttons with colour-coded gauges. Zero external dependencies — native `System.Net.WebSockets` client with SHA-256 authentication.
+
+### HTTP / Webhook
+Send HTTP requests on button press. Configure up to 10 endpoints, each with: display name, URL, HTTP method (GET/POST/PUT/PATCH/DELETE), custom JSON headers, and request body. Configurable timeout (1–60 s). Last status code and request duration rendered on the assigned button. Health degrades when the last request failed.
 
 ---
 
@@ -123,7 +134,7 @@ Plugin Provider  →  Assignable Function  →  Dispatch Mode  →  Hardware Con
 ```
 
 ### 1. Choose a source
-Select a plugin provider (SimHub, Keyboard, Mouse, vJoy, Media, System) and one of its assignable functions — a telemetry gauge, a keyboard key, a SimHub role, a media command, or a system action.
+Select a plugin provider (SimHub, OBS, HTTP, Keyboard, Mouse, vJoy, Media, System) and one of its assignable functions — a telemetry gauge, a keyboard key, a SimHub role, an OBS action, a webhook, a media command, or a system action.
 
 ### 2. Pick a dispatch mode
 
@@ -151,7 +162,7 @@ Bind the mapping to a physical button press/release, knob turn (left/right), kno
 
 ## Hardware compatibility
 
-JIB maintains a hardware catalog with VID:PID identification for 10 device families and 25+ branded models.
+JIB maintains a hardware catalog with VID:PID identification for 15 device families across 30+ branded models.
 
 | Brand | Model | Status | Family | Details |
 |---|---|---|---|---|
@@ -165,7 +176,7 @@ JIB maintains a hardware catalog with VID:PID identification for 10 device famil
 | MiraBox | 293S | Full support | SD293S | 5×3 keys · 3 screens · key GIF |
 | FHOOU | 293S | Full support | SD293S | Rebrand of MiraBox 293S (VID:PID 5548:6670) |
 | Ajazz | AKP153 / AKP153E / AKP153R | Full support | SD293S | |
-| Mars Gaming | MSD-ONE | Full support | SD293S | 293S rebrand |
+| Mars Gaming | MSD-ONE | Full support | SD293S | 293S rebrand (VID:PID 0B00:1000 / 0B00:1005) |
 | Maddog | GK150K | Full support | SD293S | |
 | Risemode | Vision 01 | Full support | SD293S | |
 | TMICE | Stream Controller | Full support | SD293S | |
@@ -180,6 +191,11 @@ JIB maintains a hardware catalog with VID:PID identification for 10 device famil
 | MiraBox | M3 | Full support | SDM3 | 5×3 keys · 3 knobs · key + BG GIF |
 | MiraBox | XL / XLE | Experimental | SDXL | 8×4 keys · key + BG GIF · pending end-to-end validation |
 | MiraBox | K1 Pro / K1 Pro EU | Experimental | K1Pro | 3×2 keys · 3 knobs · key GIF · pending end-to-end validation |
+| Elgato | Stream Deck Classic | Experimental | SDClassic | 5×3 keys · pending end-to-end validation |
+| Elgato | Stream Deck XL | Experimental | SDDXL | 8×4 keys · pending end-to-end validation |
+| Elgato | Stream Deck Neo | Experimental | SDNeo | 8 keys · 1 touchscreen · touch/swipe · pending end-to-end validation |
+| Elgato | Stream Deck + | Experimental | SDPlus | 8 keys · 1 touchscreen · 4 knobs · touch/swipe · pending end-to-end validation |
+| Elgato | Stream Deck + XL | Experimental | SDPlusXL | 36 keys · 1 touchscreen · 6 knobs · touch/swipe · pending end-to-end validation |
 
 **Status legend:**
 - **Full support** — validated in normal use, recommended for end users
@@ -219,7 +235,7 @@ The Configurator uses a global save entry point. Individual editors show their s
 
 ## SDK (for plugin developers)
 
-Third-party plugins can be authored against the `JIB.Sdk` NuGet package. Two authoring modes are available:
+Third-party plugins can be authored against the `JIB.Sdk` library. Two authoring modes are available:
 
 - **SDK-only** — parameterless constructor, portable, suitable for third-party distribution
 - **Internal host** — constructor receives `DeviceHostPluginServices` with full access to `RuntimeProviderChangeTracker`, transports, and host services
