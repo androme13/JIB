@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JIB Downloads</title>
+    <title>JIB Release Downloads</title>
     <link rel="icon" href="./icon.png" sizes="any" />
     <style>
         :root {
@@ -782,13 +782,13 @@
                     <img src="icon.png" alt="JIB" />
                 </div>
                 <div class="brand-text">
-                    <strong>JIB Downloads</strong>
-                    <span>SimHub plugin &amp; device host packages for StreamDock &amp; Elgato Stream Deck hardware</span>
+                    <strong>JIB Release Downloads</strong>
+                    <span>Packaged JIB releases for the SimHub integration, host runtime, Configurator, and supported hardware families</span>
                 </div>
             </div>
             <nav class="nav">
                 <a href="#capabilities">Capabilities</a>
-                <a href="#plugins">Plugins</a>
+                <a href="#providers">Providers</a>
                 <a href="#mapping">Mapping</a>
                 <a href="#compatibility">Compatibility</a>
                 <a href="#latest">Releases</a>
@@ -804,21 +804,21 @@
                     <div class="hero-heading">
                         <div>
                             <div class="eyebrow">Official packaged downloads</div>
-                            <h1>Download JIB releases</h1>
+                            <h1>Download packaged JIB releases</h1>
                         </div>
                         <img class="hero-logo" src="logo.png" alt="JIB SimHub" />
                     </div>
                     <p class="hero-copy">
-                        JIB (Jack In the Box) is a SimHub plugin and device host for StreamDock-compatible and Elgato Stream Deck hardware.
-                        This page is dedicated to packaged release downloads only.
-                        Source code archives are not listed here &mdash; users see the ZIP files attached to your GitHub releases.
+                        JIB (Jack In the Box) combines a SimHub integration, a host runtime, and a Configurator for StreamDock-compatible and supported Elgato Stream Deck hardware.
+                        This page lists packaged end-user releases only.
+                        Source archives are intentionally excluded so users download the ready-to-install release assets attached to GitHub releases.
                     </p>
                     <div class="hero-actions">
                         <a class="btn btn-primary" id="heroDownloadBtn" href="#latest">Latest release</a>
                         <a class="btn btn-secondary" href="https://github.com/androme13/JIB/releases" target="_blank" rel="noopener">Open releases on GitHub</a>
                     </div>
                     <div class="hero-note">
-                        Publish a new GitHub release, attach your plugin ZIP, and this page updates automatically.
+                        Publish a new GitHub release, attach the packaged JIB asset, and this page updates automatically.
                     </div>
                 </div>
 
@@ -826,17 +826,17 @@
                     <div class="stat">
                         <div class="stat-label">Repository</div>
                         <div class="stat-value mono">androme13/JIB</div>
-                        <div class="stat-copy">Public release feed used for this download page.</div>
+                        <div class="stat-copy">Public GitHub release feed used by this page.</div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">Published releases</div>
                         <div class="stat-value" id="releaseCount">-</div>
-                        <div class="stat-copy">Draft releases are ignored until published.</div>
+                        <div class="stat-copy">Draft and unpublished releases are ignored.</div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">Latest version</div>
                         <div class="stat-value" id="latestVersionStat">Not published yet</div>
-                        <div class="stat-copy">Shown as soon as the first public release is available.</div>
+                        <div class="stat-copy">Filled automatically from the latest public packaged release.</div>
                     </div>
                 </aside>
             </div>
@@ -850,72 +850,76 @@
                 <div class="mini-grid">
                     <div class="mini-card">
                         <h3>Live telemetry display</h3>
-                        <p>Render real-time SimHub telemetry (speed, RPM, gear, temperatures, flags, trucking data) on StreamDock LCD keys as live JPEG frames.</p>
+                        <p>Render live SimHub telemetry on LCD keys and screens with the same host-side renderer used for preview and hardware output.</p>
                     </div>
                     <div class="mini-card">
                         <h3>Physical controls &amp; dispatch</h3>
-                        <p>Map hardware buttons, knobs, and touch zones to keyboard keys, mouse actions, vJoy axes, media controls, SimHub Control Mapper roles, and system commands.</p>
+                        <p>Map buttons, knob turns, knob presses, touch zones, and swipe gestures to provider functions such as keyboard, mouse, media, OBS, vJoy, HTTP, and system actions.</p>
                     </div>
                     <div class="mini-card">
                         <h3>Multi-page touch navigation</h3>
-                        <p>Create multiple main pages with nested touch pages on touchscreen devices. Swipe left/right to navigate between pages, with full CRUD from the Configurator.</p>
+                        <p>Create multiple main pages with nested touch pages on supported touchscreen devices. Swipe navigation, page routing, and default scene return are handled by the current canonical workspace model.</p>
                     </div>
                     <div class="mini-card">
                         <h3>Plugin ecosystem</h3>
-                        <p>Eight built-in plugins provide SimHub telemetry, OBS Studio control, HTTP webhooks, keyboard output, mouse control, vJoy virtual joystick, media transport, and system monitoring &mdash; with an SDK for third-party extensions.</p>
+                        <p>Nine built-in providers ship with the host: SimHub, Media, Keyboard, Mouse, vJoy, OBS, HTTP, System Commands, and System Monitor &mdash; with an SDK for third-party extensions.</p>
                     </div>
                     <div class="mini-card">
                         <h3>LED &amp; brightness control</h3>
-                        <p>Control global and per-key RGB LEDs, panel brightness, animated GIF backgrounds, and knob LED rings &mdash; resolved per-device via SDK or native HID transport.</p>
+                        <p>Control brightness and hardware lighting features by family, including global RGB, per-key lighting, animated backgrounds, and knob LED rings when the device contract exposes them.</p>
                     </div>
                     <div class="mini-card">
                         <h3>Profiles &amp; workspaces</h3>
-                        <p>Vehicle-aware profiles with learned telemetry min/max values, per-profile mapping overrides, and composite workspace save/load with atomic consistency.</p>
+                        <p>Use composite workspaces, profile-aware mappings, and host-side persistence so layout, routing, and runtime publication stay aligned across preview and device output.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="plugins">
+        <section class="section" id="providers">
             <div class="card section-card">
                 <div class="section-head">
                     <div>
-                        <h2>Built-in plugins</h2>
-                        <p>Each plugin exposes assignable functions and dispatch targets for hardware controls.</p>
+                        <h2>Built-in providers</h2>
+                        <p>Each built-in provider exposes assignable functions or live runtime values for hardware controls.</p>
                     </div>
                 </div>
                 <div class="mini-grid">
                     <div class="mini-card">
                         <h3>SimHub</h3>
-                        <p>Live telemetry from any racing simulator. Speed, RPM, gear, fuel, temperatures, driver aids, flags. Also exposes SimHub Control Mapper roles and event triggers for bidirectional control.</p>
-                    </div>
-                    <div class="mini-card">
-                        <h3>Keyboard</h3>
-                        <p>Map any button to a keyboard key or hotkey combination. Supports Press/Release dispatch for held actions (push-to-talk, modifier keys).</p>
-                    </div>
-                    <div class="mini-card">
-                        <h3>Mouse</h3>
-                        <p>Left/right/middle clicks, double-click, scroll up/down, relative and absolute cursor movement. Configurable sensitivity and scroll speed.</p>
-                    </div>
-                    <div class="mini-card">
-                        <h3>vJoy</h3>
-                        <p>Virtual joystick output via vJoy driver. 128 buttons and 8 axes per device. Press/Release or PulseOnly dispatch for held/instant actions.</p>
+                        <p>Live simulator telemetry and SimHub Control Mapper roles for dashboards, gauges, indicators, and bidirectional racing controls.</p>
                     </div>
                     <div class="mini-card">
                         <h3>Media</h3>
-                        <p>Play/Pause, next/previous track, volume up/down, mute. Per-application audio discovery creates individual volume controls for every active audio app.</p>
+                        <p>Master and per-application media functions, including transport actions, mute, and runtime audio state for dynamic displays.</p>
                     </div>
                     <div class="mini-card">
-                        <h3>System</h3>
-                        <p>CPU, RAM, GPU, network throughput, battery, and uptime telemetry gauges. System commands: shutdown, restart, sleep, hibernate, lock, brightness, monitor off.</p>
+                        <h3>Keyboard</h3>
+                        <p>Keyboard keys and hotkey combinations with held and instant dispatch modes for push-to-talk, shortcuts, and modifier-driven actions.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Mouse</h3>
+                        <p>Mouse clicks, scroll actions, and cursor movement for buttons, encoders, or touch interactions.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>vJoy</h3>
+                        <p>Virtual joystick buttons and axes through vJoy for sim and game bindings that expect joystick-style input.</p>
                     </div>
                     <div class="mini-card">
                         <h3>OBS Studio</h3>
-                        <p>Control OBS via WebSocket v5: toggle stream/recording/replay/virtual camera, switch scenes, toggle source visibility. Live stream and recording status displayed on buttons.</p>
+                        <p>OBS actions over WebSocket v5, including scene switching, recording and streaming controls, source visibility, and live state feedback.</p>
                     </div>
                     <div class="mini-card">
-                        <h3>HTTP / Webhook</h3>
-                        <p>Send HTTP requests on button press. Configure up to 10 endpoints with custom URL, method (GET/POST/PUT/PATCH/DELETE), JSON headers, and body. Status code rendered on the button.</p>
+                        <h3>HTTP</h3>
+                        <p>HTTP requests and webhook-style actions with configurable method, URL, headers, and body for external integrations.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>System Commands</h3>
+                        <p>Host-side system actions such as shutdown, restart, sleep, hibernate, lock, brightness, and monitor power commands.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>System Monitor</h3>
+                        <p>Live host metrics such as CPU, RAM, GPU, network, battery, and uptime for status displays and telemetry-style cards.</p>
                     </div>
                 </div>
             </div>
@@ -926,14 +930,14 @@
                 <div class="section-head">
                     <div>
                         <h2>How mapping works</h2>
-                        <p>Every hardware control can be assigned to any function exposed by a plugin.</p>
+                        <p>Every hardware control can be assigned to a supported provider function or runtime value.</p>
                     </div>
                 </div>
                 <div class="mini-grid">
                     <div class="mini-card step-card">
                         <div class="step-badge">1</div>
                         <h3>Choose a source</h3>
-                        <p>Select a plugin provider and one of its assignable functions &mdash; telemetry gauge, keyboard key, SimHub role, OBS action, HTTP webhook, media command, or system action.</p>
+                        <p>Select a provider and one of its exposed functions or runtime values: SimHub telemetry, media state, keyboard, mouse, vJoy, OBS, HTTP, or system actions.</p>
                     </div>
                     <div class="mini-card step-card">
                         <div class="step-badge">2</div>
@@ -949,7 +953,7 @@
                 <div style="margin-top:18px; display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                     <div class="panel" style="padding:16px;">
                         <div class="stat-label" style="margin-bottom:8px;">Dispatch modes</div>
-                        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.7;">Two execution modes per mapping: <strong>Press / Release</strong> for signals that need a held state, and <strong>PulseOnly</strong> for one-shot triggers. Auto-mode picks the plugin-recommended default.</p>
+                        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.7;">Two execution modes per mapping: <strong>Press / Release</strong> for signals that need a held state, and <strong>PulseOnly</strong> for one-shot triggers. Auto-mode picks the provider-recommended default.</p>
                     </div>
                     <div class="panel" style="padding:16px;">
                         <div class="stat-label" style="margin-bottom:8px;">Touch pages &amp; swipe</div>
@@ -965,22 +969,22 @@
 
         <section class="section">
             <h2 style="text-align:center; margin:0 0 6px; font-size:22px; letter-spacing:-0.03em;">Get started in three steps</h2>
-            <p style="text-align:center; margin:0 0 18px; color:var(--muted);">Install JIB, connect your StreamDock, and start mapping.</p>
+            <p style="text-align:center; margin:0 0 18px; color:var(--muted);">Install the packaged release, start the host, then configure your hardware in JIB.</p>
             <div class="mini-grid">
                 <div class="mini-card step-card">
                     <div class="step-badge">1</div>
-                    <h3>Download the latest ZIP</h3>
-                    <p>Get the packaged JIB plugin archive from the latest GitHub release below.</p>
+                    <h3>Download the packaged release</h3>
+                    <p>Get the latest packaged JIB asset from the GitHub release list below.</p>
                 </div>
                 <div class="mini-card step-card">
                     <div class="step-badge">2</div>
-                    <h3>Install &amp; launch the host</h3>
-                    <p>Extract the package, place the plugin files in SimHub, then launch JIB.Service. The host manages all hardware, rendering, and plugin execution.</p>
+                    <h3>Install and start JIB</h3>
+                    <p>Extract the package, install or launch JIB.Service, and add the optional SimHub plugin if you want in-game telemetry and SimHub control integration.</p>
                 </div>
                 <div class="mini-card step-card">
                     <div class="step-badge">3</div>
-                    <h3>Configure your device</h3>
-                    <p>Open the JIB Configurator, connect to the host, and visually edit button layouts, mappings, touch pages, and profiles for each connected device.</p>
+                    <h3>Configure your hardware</h3>
+                    <p>Open JIB Configurator, connect to the host, and edit scenes, mappings, touch pages, and profiles for each detected device.</p>
                 </div>
             </div>
         </section>
@@ -989,11 +993,36 @@
             <div class="card section-card">
                 <div class="section-head">
                     <div>
-                        <h2>Plugin preview</h2>
-                        <p>A quick visual overview of the JIB plugin interface, features, and workflow.</p>
+                        <h2>Configurator preview</h2>
+                        <p>A quick visual overview of the JIB Configurator workflow, editing surfaces, and device management screens.</p>
                     </div>
                 </div>
                 <div class="carousel" id="mediaCarousel"></div>
+            </div>
+        </section>
+
+        <section class="section" id="support">
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Troubleshooting</h2>
+                        <p>Start with these checks before assuming a hardware or compatibility regression.</p>
+                    </div>
+                </div>
+                <div class="mini-grid">
+                    <div class="mini-card">
+                        <h3>After updating JIB</h3>
+                        <p>If a box was already detected on an older JIB version and behaves incorrectly after upgrading, run <strong>Debug &gt; Reset all</strong> in the Configurator, then retest before going further.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Vendor software conflicts</h3>
+                        <p>Close vendor applications that may still own the device. For Elgato hardware, the official Stream Deck software must be closed before JIB can control the box reliably.</p>
+                    </div>
+                    <div class="mini-card">
+                        <h3>Rebrands and firmware</h3>
+                        <p>Some brands share the same hardware family and VID:PID but still vary by firmware, transport behaviour, or HID branding. If behaviour differs, compare the exact detected family first.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1002,17 +1031,16 @@
                 <div class="section-head">
                     <div>
                         <h2>Hardware compatibility</h2>
-                        <p>Compatibility is tracked by family and model so users can immediately see the current validation level for their device.</p>
+                        <p>Compatibility is tracked by hardware family and current host publication coverage so users can quickly see the present validation level for each device line.</p>
                     </div>
                 </div>
                 <div class="mini-grid">
                     <div class="mini-card">
                         <h3>How to read this page</h3>
                         <ul>
-                            <li><strong>Full support</strong>: validated in normal use and recommended for end users</li>
-                            <li><strong>Partial support</strong>: usable, but some features or behaviours still need validation</li>
-                            <li><strong>Experimental</strong>: native driver registered, not yet validated end to end</li>
-                            <li><strong>Unknown</strong>: not yet tested or not enough feedback available</li>
+                            <li><strong>Validated</strong>: hardware publication is covered and current compatibility diagnostics are aligned for the known device family</li>
+                            <li><strong>Likely good</strong>: family contract looks correct, but broader real-device validation is still recommended</li>
+                            <li><strong>Needs real device validation</strong>: known family or provider path, but not yet strong enough to be presented as field-validated</li>
                         </ul>
                     </div>
                     <div class="mini-card">
@@ -1032,6 +1060,7 @@
                         <ul>
                             <li>Actual behaviour may vary depending on firmware version, hardware revision, and Windows environment</li>
                             <li>Direct USB HID access can behave differently across seemingly similar models</li>
+                            <li>If a box was already detected on an older JIB version and behaves incorrectly after upgrading, run <strong>Debug &gt; Reset all</strong> in the Configurator, then retest before going further</li>
                             <li>Simultaneous active control with the vendor application is not officially guaranteed</li>
                             <li><strong>Elgato Stream Deck:</strong> the official Stream Deck software must be closed (it monopolises the HID device). The first-gen Stream Deck Mini (BMP format) and the 2017 Stream Deck (PID 0x0060) are not supported yet.</li>
                         </ul>
@@ -1053,213 +1082,213 @@
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N3</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">3&times;2 keys &middot; 3 knobs &middot; 3 aux buttons &middot; native brightness</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP03 / AKP03E / AKP03R</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Soomfon</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Controller SE</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Mars Gaming</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MSD-TWO</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">TreasLin</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N3</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Redragon</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Skyrider SS-551</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293 V2 / V3</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293S</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 screens &middot; key GIF</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">FHOOU</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">293S</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Rebrand of MiraBox 293S (same VID:PID 5548:6670)</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Rebrand of MiraBox 293S on the shared VID:PID 5548:6670; the current code now preserves the HID manufacturer branding for this shared family.</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP153 / AKP153E / AKP153R</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Mars Gaming</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MSD-ONE</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">293S rebrand (VID:PID 0B00:1000 / 0B00:1005)</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Maddog</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">GK150K</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Risemode</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Vision 01</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">TMICE</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Controller</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Soomfon</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">XF-CN001</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SD293S</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);"></td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N1</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN1</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 screens &middot; 1 knob &middot; 2 aux buttons</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">VSD</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N1</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN1</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Hardware validation still in progress</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N4 / N4 E</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;2 keys &middot; 1 screen &middot; 4 knobs &middot; touch/swipe &middot; native brightness</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP05E</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Non-Pro family</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">N4 Pro / N4 Pro E</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4 Pro</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;2 keys &middot; 1 screen &middot; 4 knobs &middot; touch/swipe &middot; knob LED rings &middot; native brightness</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Ajazz</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">AKP05E PRO</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--success); font-weight:800;">Validated</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDN4 Pro</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">Pro family &middot; knob LED rings &middot; vibration</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">M18 / M18E</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#ffcf70; font-weight:800;">Partial support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDM18</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 aux buttons &middot; Key + BG GIF</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">M3</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:#90f0b4; font-weight:800;">Full support</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDM3</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys &middot; 3 knobs &middot; Key + BG GIF</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">MiraBox</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">XL / XLE</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted); font-weight:800;">Experimental</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDXL</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">8&times;4 keys &middot; Key + BG GIF &middot; pending end-to-end validation</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px;">MiraBox</td>
                                 <td style="padding:14px 16px;">K1 Pro / K1 Pro EU</td>
-                                <td style="padding:14px 16px; color:var(--muted); font-weight:800;">Experimental</td>
+                                <td style="padding:14px 16px; color:var(--warning); font-weight:800;">Likely good</td>
                                 <td style="padding:14px 16px; color:var(--muted);">K1Pro</td>
                                 <td style="padding:14px 16px; color:var(--muted);">3&times;2 keys &middot; 3 knobs &middot; Key GIF &middot; pending end-to-end validation</td>
                             </tr>
                             <tr style="border-top:2px solid rgba(240,79,79,0.28);">
-                                <td colspan="5" style="padding:14px 16px; color:var(--accent-2); font-weight:700; font-size:1.02em;">Elgato Stream Deck &mdash; new hardware plugin (untested, initial development)</td>
+                                <td colspan="5" style="padding:14px 16px; color:var(--accent-2); font-weight:700; font-size:1.02em;">Elgato Stream Deck &mdash; new hardware provider path (known contract, still needs real device validation)</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck Classic / Mk.2 / Module 15</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDClassic</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">5&times;3 keys (72&times;72) &middot; 480&times;272 LCD &middot; JPEG &middot; rotation 180&deg;</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck XL / Module 32</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDDXL</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">8&times;4 keys (96&times;96) &middot; 1024&times;600 LCD &middot; JPEG &middot; rotation 180&deg;</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck Neo</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDNEO</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">4&times;2 keys (96&times;96) + 2 sensors &middot; 480&times;320 LCD + 248&times;58 window &middot; JPEG &middot; rotation 180&deg;</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Elgato</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line);">Stream Deck +</td>
-                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">SDPLUS</td>
                                 <td style="padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted);">4&times;2 keys (120&times;120) + 4 encoders &middot; 800&times;480 LCD + touch window 800&times;100 &middot; JPEG &middot; no rotation</td>
                             </tr>
                             <tr>
                                 <td style="padding:14px 16px;">Elgato</td>
                                 <td style="padding:14px 16px;">Stream Deck + XL</td>
-                                <td style="padding:14px 16px; color:var(--warning); font-weight:800;">New &middot; Untested</td>
+                                <td style="padding:14px 16px; color:var(--danger); font-weight:800;">Needs real device validation</td>
                                 <td style="padding:14px 16px; color:var(--muted);">SDPLUSXL</td>
                                 <td style="padding:14px 16px; color:var(--muted);">9&times;4 keys (112&times;112) + 6 encoders &middot; 1280&times;800 LCD + touch window 1200&times;100 &middot; JPEG &middot; rotation 270&deg;</td>
                             </tr>
@@ -1456,7 +1485,7 @@
         function buildAssetsHtml(release) {
             const assets = getAssets(release);
             if (!assets.length) {
-                return `<div class="empty">No packaged downloadable asset is attached to this release yet. Attach your plugin ZIP in the GitHub release assets and it will appear here automatically.</div>`;
+                return `<div class="empty">No packaged downloadable asset is attached to this release yet. Attach the packaged JIB release asset in GitHub and it will appear here automatically.</div>`;
             }
 
             return `<div class="assets">${assets.map(asset => `
@@ -1528,7 +1557,7 @@
 
                 if (!releases.length) {
                     latestVersionStat.textContent = 'Not published yet';
-                    latestContent.innerHTML = `<div class="empty">No public release has been published for <span class="mono">${owner}/${repo}</span> yet. As soon as the first release is published with a plugin ZIP attached, this page will populate automatically.</div>`;
+                    latestContent.innerHTML = `<div class="empty">No public release has been published for <span class="mono">${owner}/${repo}</span> yet. As soon as the first packaged release asset is attached to a public GitHub release, this page will populate automatically.</div>`;
                     historyContent.innerHTML = `<div class="empty">Release history will appear here after the first published release.</div>`;
                     heroDownloadBtn.removeAttribute('href');
                     heroDownloadBtn.style.pointerEvents = 'none';
