@@ -48,6 +48,8 @@ const repo = {
             ['medias/Hosts tab 1.png', 'Host discovery'],
             ['medias/Debug tab 1.png', 'Diagnostics'],
             ['medias/Plugins tab 1.png', 'Plugin providers'],
+            ['medias/Simhub N3 1.png', 'SimHub on MiraBox N3'],
+            ['medias/Simhub N4PRO 1.png', 'SimHub on MiraBox N4 Pro'],
             ['medias/Settings tab 1.png', 'Settings']
         ];
 
