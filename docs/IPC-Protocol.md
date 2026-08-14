@@ -1,18 +1,18 @@
-# Protocole IPC JSON — JIB DeviceHost
+# JSON IPC Protocol — JIB DeviceHost
 
 ## Wire format
 
-### Configurateur ↔ Host (port 16550)
-Binary length-prefixed JSON, une requête par connexion TCP.
+### Configurator ↔ Host (port 16550)
+Binary length-prefixed JSON, one request per TCP connection.
 
 ```
 [4 bytes: Int32 little-endian payload length][N bytes: UTF-8 JSON]
 ```
 
-### Host → Configurateur events (port 16550 + 1, loopback)
-Même format length-prefixed, push-only. Flux continu de `RuntimeProviderStateChangedEvent`.
+### Host → Configurator events (port 16550 + 1, loopback)
+Same length-prefixed format, push-only. Continuous stream of `RuntimeProviderStateChangedEvent`.
 
-Handshake d’abonnement :
+Subscription handshake:
 ```json
 {
   "MessageType": "SubscribeEvents",
@@ -25,49 +25,49 @@ Handshake d’abonnement :
 }
 ```
 
-`ClientName`, `ClientHostName`, `ClientProcessId`, `ClientVersion` et `ClientSessionId` sont optionnels au niveau protocole, mais utilisés par le host pour journaliser proprement les connexions Configurator persistantes.
+`ClientName`, `ClientHostName`, `ClientProcessId`, `ClientVersion` and `ClientSessionId` are optional at the protocol level, but are used by the host to log persistent Configurator connections cleanly.
 
 ### SimHub Plugin ↔ Host (port 16555)
-Line-delimited JSON (`StreamWriter.WriteLine` / `StreamReader.ReadLine`), connexion persistante avec handshake + heartbeat.
+Line-delimited JSON (`StreamWriter.WriteLine` / `StreamReader.ReadLine`), persistent connection with handshake + heartbeat.
 
-Handshake :
+Handshake:
 ```
 → {"Handshake":"JIB.SimHub.Plugin","Version":"1.0"}
 ← {"Handshake":"OK","ProviderId":"simhub-channel"}
 ```
 
-Heartbeat : ping/pong toutes les 5s.
+Heartbeat: ping/pong every 5s.
 
 ### Discovery (UDP port 16551)
 
-**Mode principal — Request/Reply actif**
+**Primary mode — Active Request/Reply**
 
-Le Configurateur ouvre un socket UDP éphémère (port 0), envoie un `DiscoverRequest` en broadcast sur le port 16551, puis collecte les réponses unicast pendant une fenêtre de 1.5 s. Les réponses sont dédupliquées par `host:port`.
+The Configurator opens an ephemeral UDP socket (port 0), sends a `DiscoverRequest` broadcast on port 16551, then collects unicast replies during a 1.5 s window. Replies are deduplicated by `host:port`.
 
 ```
 Query  → {"MessageType":"DiscoverRequest"}
 Reply  ← {"Service":"JIB.DeviceHost","Host":"<LAN-IP>","Port":16550,"Version":"1.0"}
 ```
 
-**Mode secondaire — Beacon périodique**
+**Secondary mode — Periodic beacon**
 
-Le host envoie un beacon broadcast toutes les 2 secondes. Ce signal reste disponible comme complément passif mais la découverte du Configurateur ne dépend plus de lui.
+The host sends a broadcast beacon every 2 seconds. This signal remains available as a passive complement, but Configurator discovery no longer depends on it.
 
 ```
 Beacon → {"Service":"JIB.DeviceHost","Host":"<LAN-IP>","Port":16550,"Version":"1.0"}
 ```
 
-**Fast-path local**
+**Local fast-path**
 
-Si le fichier `%TEMP%\JIB.Service.port` (JSON `{"Port":<tcpPort>}`) existe, le Configurateur tente une connexion TCP directe sur `127.0.0.1:<port>` avant toute découverte UDP. La détection du host local est ainsi déterministe et indépendante du réseau.
+If the file `%TEMP%\JIB.Service.port` (JSON `{"Port":<tcpPort>}`) exists, the Configurator attempts a direct TCP connection on `127.0.0.1:<port>` before any UDP discovery. Local host detection is thus deterministic and network-independent.
 
-**Résolution d'adresse LAN du host**
+**Host LAN address resolution**
 
-Le host sélectionne sa meilleure adresse IPv4 LAN en parcourant les interfaces réseau actives (priorité aux interfaces avec passerelle, exclusion des tunnels et loopback). Les plages `10.0.0.0/8`, `172.16.0.0/12` et `192.168.0.0/16` sont toutes traitées de façon uniforme.
+The host selects its best IPv4 LAN address by scanning active network interfaces (priority to interfaces with a gateway, excluding tunnels and loopback). The `10.0.0.0/8`, `172.16.0.0/12` and `192.168.0.0/16` ranges are all handled uniformly.
 
 ---
 
-## Enveloppe de message (tous les messages port 16550)
+## Message envelope (all port 16550 messages)
 
 ```json
 {
@@ -75,136 +75,136 @@ Le host sélectionne sa meilleure adresse IPv4 LAN en parcourant les interfaces 
   "MessageType": "GetHostInfoRequest",
   "CorrelationId": "abc123...",
   "SentAtUtc": "2025-01-01T00:00:00.0000000Z",
-  ...champs spécifiques au message...
+  ...message-specific fields...
 }
 ```
 
-Réponses ajoutent `Success`, `ErrorCode`, `ErrorMessage`.
+Responses add `Success`, `ErrorCode`, `ErrorMessage`.
 
 ---
 
-## Types de messages (60+)
+## Message types (60+)
 
 ### Housekeeping
 | MessageType | Description |
 |---|---|
-| `GetHostInfoRequest/Response` | Infos hôte : HostInfo, Capabilities, MachineInfo, NodeInfo, PrimaryEndpoint |
-| `GetHostsRequest/Response` | Liste des hôtes découverts |
-| `GetHostSnapshotRequest/Response` | Snapshot runtime complet |
-| `GetHostSettingsRequest/Response` | Settings host (qualité, FPS, brightness, screensaver, accès réseau) |
-| `SetCompositeHostSettingsRequest/Response` | Mise à jour atomique des host settings |
-| `GetHostWorkspaceRequest/Response` | Workspace (device sélectionné, page, contexte) |
-| `GetCompositeWorkspaceRequest/Response` | Workspace composite (bindings, subscriptions, render profiles, behavior, layout) |
-| `SetHostWorkspaceRequest/Response` | Navigation workspace (DeviceSerial, CurrentPageId, CurrentContext, ValidateOnly) |
-| `ExecuteHostCommandRequest/Response` | Commandes host (ExportDatabase, ImportDatabase, ResetHostState, ProbeUsbDevice, etc.) |
+| `GetHostInfoRequest/Response` | Host info: HostInfo, Capabilities, MachineInfo, NodeInfo, PrimaryEndpoint |
+| `GetHostsRequest/Response` | List of discovered hosts |
+| `GetHostSnapshotRequest/Response` | Full runtime snapshot |
+| `GetHostSettingsRequest/Response` | Host settings (quality, FPS, brightness, screensaver, network access) |
+| `SetCompositeHostSettingsRequest/Response` | Atomic host settings update |
+| `GetHostWorkspaceRequest/Response` | Workspace (selected device, page, context) |
+| `GetCompositeWorkspaceRequest/Response` | Composite workspace (bindings, subscriptions, render profiles, behavior, layout) |
+| `SetHostWorkspaceRequest/Response` | Workspace navigation (DeviceSerial, CurrentPageId, CurrentContext, ValidateOnly) |
+| `ExecuteHostCommandRequest/Response` | Host commands (ExportDatabase, ImportDatabase, ResetHostState, ProbeUsbDevice, etc.) |
 
 ### Rendering
 | MessageType | Description |
 |---|---|
-| `GetHostRenderPayloadRequest/Response` | Résout le payload de rendu pour un contrôle à partir d'une `Route` (`DeviceSerial`, `MainPageId`, `PageId`, `ControlContext`) |
-| `RenderHostPreviewRequest/Response` | Rendu preview (`Route`, `RotationDegrees`; `Width`/`Height` optionnels, `0` = taille native du contrôle) → image bytes |
-| `RenderHostPreviewBatchRequest/Response` | Rendu preview par lots |
-| `SetTransientControlRenderProfileRequest/Response` | Applique un render profile transient pour la preview, sans persistance |
-| `RenderDeviceFramesRequest/Response` | Rendu frames sur device physique |
+| `GetHostRenderPayloadRequest/Response` | Resolves the render payload for a control from a `Route` (`DeviceSerial`, `MainPageId`, `PageId`, `ControlContext`) |
+| `RenderHostPreviewRequest/Response` | Preview render (`Route`, `RotationDegrees`; optional `Width`/`Height`, `0` = control native size) → image bytes |
+| `RenderHostPreviewBatchRequest/Response` | Batch preview render |
+| `SetTransientControlRenderProfileRequest/Response` | Applies a transient render profile for preview, without persisting |
+| `RenderDeviceFramesRequest/Response` | Renders frames on the physical device |
 
 ### Hardware
 | MessageType | Description |
 |---|---|
-| `GetHardwareCatalogRequest/Response` | Catalogue hardware connu |
-| `GetHardwareInventoryRequest/Response` | Inventaire devices USB |
-| `GetHardwareDeviceCapabilitiesRequest/Response` | Capacités détaillées par device |
-| `SetDeviceBrightnessRequest/Response` | Réglage luminosité |
-| `SetDeviceLedRequest/Response` | Couleurs LED par device |
-| `SetDeviceStartupBackgroundRequest/Response` | Écriture du fond d'écran de boot persistant |
-| `SetDeviceDiagnosticStateRequest/Response` | Mode diagnostic device |
-| `SubscribeHardwareEventsRequest/Response` | Souscription événements hardware |
-| `UnsubscribeHardwareEventsRequest/Response` | Désabonnement |
+| `GetHardwareCatalogRequest/Response` | Known hardware catalog |
+| `GetHardwareInventoryRequest/Response` | USB device inventory |
+| `GetHardwareDeviceCapabilitiesRequest/Response` | Detailed per-device capabilities |
+| `SetDeviceBrightnessRequest/Response` | Brightness setting |
+| `SetDeviceLedRequest/Response` | Per-device LED colors |
+| `SetDeviceStartupBackgroundRequest/Response` | Writes the persistent boot background |
+| `SetDeviceDiagnosticStateRequest/Response` | Device diagnostic mode |
+| `SubscribeHardwareEventsRequest/Response` | Hardware event subscription |
+| `UnsubscribeHardwareEventsRequest/Response` | Unsubscribe |
 
 ### Control Mappings
 | MessageType | Description |
 |---|---|
-| `GetControlMappingsRequest/Response` | Mappings actuels |
-| `GetControlMappingLayoutRequest/Response` | Layout devices/pages/controls |
-| `SetCompositeWorkspaceRequest/Response` | Sauvegarde atomique des bindings, subscriptions, render profile, behavior et layout |
-| `SetControlStaticImageRequest/Response` | Affectation d'une image statique par contrôle |
-| `GetMappingCatalogsRequest/Response` | Catalogues de mappings disponibles |
-| `GetMappingCatalogEntriesRequest/Response` | Entrées d'un catalogue |
-| `GetDeviceRoutingRequest/Response` | Routage device (VJoy ID, page active) |
-| `SetDeviceRoutingRequest/Response` | MAJ routage |
-| `GetDeviceStateRequest/Response` | État device |
-| `SetDeviceStateRequest/Response` | MAJ état |
+| `GetControlMappingsRequest/Response` | Current mappings |
+| `GetControlMappingLayoutRequest/Response` | Devices/pages/controls layout |
+| `SetCompositeWorkspaceRequest/Response` | Atomic save of bindings, subscriptions, render profile, behavior and layout |
+| `SetControlStaticImageRequest/Response` | Per-control static image assignment |
+| `GetMappingCatalogsRequest/Response` | Available mapping catalogs |
+| `GetMappingCatalogEntriesRequest/Response` | Entries of a catalog |
+| `GetDeviceRoutingRequest/Response` | Device routing (VJoy ID, active page) |
+| `SetDeviceRoutingRequest/Response` | Routing update |
+| `GetDeviceStateRequest/Response` | Device state |
+| `SetDeviceStateRequest/Response` | State update |
 
 ### Runtime Providers
 | MessageType | Description |
 |---|---|
-| `GetRuntimeEventsRequest/Response` | Événements runtime bufferisés |
-| `GetDisplaySourceStatesRequest/Response` | États des sources d'affichage par contexte |
-| `GetRuntimeProviderDataRequest/Response` | Données runtime d'un provider |
-| `SetRuntimeProviderDataRequest/Response` | Écriture de données runtime provider |
-| `RegisterRuntimeProviderSessionRequest/Response` | Enregistrement session provider |
-| `NotifyRuntimeProviderStateChangedRequest/Response` | Notification changement état provider |
-| `RuntimeProviderStateChangedEvent` | Push event (port events) |
+| `GetRuntimeEventsRequest/Response` | Buffered runtime events |
+| `GetDisplaySourceStatesRequest/Response` | Display source states by context |
+| `GetRuntimeProviderDataRequest/Response` | Runtime data for a provider |
+| `SetRuntimeProviderDataRequest/Response` | Runtime provider data write |
+| `RegisterRuntimeProviderSessionRequest/Response` | Provider session registration |
+| `NotifyRuntimeProviderStateChangedRequest/Response` | Provider state change notification |
+| `RuntimeProviderStateChangedEvent` | Push event (events port) |
 
-Notes de rendu runtime :
-- Une `RuntimeFunctionDescriptor` destinée à l’éditeur `Display` doit publier un `FunctionKind` explicite.
-- Si `FunctionKind` est omis, il reste à `Unknown` et le Configurateur filtre la fonction hors de la liste assignable, même si `ProviderId`, `FunctionId` et `CatalogKey` sont corrects.
-- En pratique, les plugins doivent utiliser `Telemetry` ou `HostIntegration` pour les fonctions assignables.
-- `TitleText` est le seul texte structurel de tête pour les états runtime provider normaux.
-- `HeaderText` ne doit plus être utilisé par les plugins pour les fonctions runtime métiers. Les états comme `MUTED`, `LIVE`, `REC` ou les contextes comme `System` doivent aller dans les métriques ou overlays.
-- `ShowHeader` est désormais interprété côté host comme une décision de layout liée à la présence du `TitleText`, pas comme un canal métier pour afficher ou masquer un sous-bandeau provider.
-- `RuntimeStateHint.Warning` et `RuntimeStateHint.Alert` portent une sémantique visuelle runtime :
-  - `Warning` = état réactif ou intervention visible qui doit attirer l’œil sans devenir une alerte critique
-  - `Alert` = état plus urgent ou plus fort que `Warning`
-- Les quality profiles (`Low`, `Medium`, `High`) ne changent pas cette sémantique. Ils changent seulement la richesse du rendu utilisé pour l’exprimer.
+Runtime rendering notes:
+- A `RuntimeFunctionDescriptor` intended for the `Display` editor must publish an explicit `FunctionKind`.
+- If `FunctionKind` is omitted, it remains `Unknown` and the Configurator filters the function out of the assignable list, even when `ProviderId`, `FunctionId` and `CatalogKey` are correct.
+- In practice, plugins should use `Telemetry` or `HostIntegration` for assignable functions.
+- `TitleText` is the only structural header text for normal runtime provider states.
+- `HeaderText` should no longer be used by plugins for business runtime functions. States such as `MUTED`, `LIVE`, `REC` or contexts such as `System` should go into metrics or overlays.
+- `ShowHeader` is now interpreted host-side as a layout decision tied to the presence of `TitleText`, not as a business channel to show or hide a provider sub-banner.
+- `RuntimeStateHint.Warning` and `RuntimeStateHint.Alert` carry a runtime visual semantic:
+  - `Warning` = reactive state or visible intervention that should catch the eye without becoming a critical alert
+  - `Alert` = more urgent or stronger state than `Warning`
+- Quality profiles (`Low`, `Medium`, `High`) do not change this semantic. They only change the richness of the rendering used to express it.
 
 ### Profiles
 | MessageType | Description |
 |---|---|
-| `GetProfilesRequest/Response` | Liste profils |
-| `GetProfileMappingsRequest/Response` | Mappings par profil |
-| `SetProfileMappingsRequest/Response` | Écriture mappings profil |
-| `DeleteProfileOverrideRequest/Response` | Suppression override |
-| `GetVehicleProfileLearnedValuesRequest/Response` | Valeurs apprises véhicule |
+| `GetProfilesRequest/Response` | Profile list |
+| `GetProfileMappingsRequest/Response` | Mappings per profile |
+| `SetProfileMappingsRequest/Response` | Profile mappings write |
+| `DeleteProfileOverrideRequest/Response` | Override removal |
+| `GetVehicleProfileLearnedValuesRequest/Response` | Vehicle learned values |
 
 ### Plugins & Transports
 | MessageType | Description |
 |---|---|
-| `GetPluginsRequest/Response` | Liste plugins (ProviderId, DisplayName, IsAvailable) |
-| `GetPluginSettingsRequest/Response` | Settings d'un plugin |
-| `ApplyPluginSettingsRequest/Response` | Appliquer un batch de settings avec valeurs JSON typées |
-| `GetPluginDataRequest/Response` | Données plugin |
-| `GetTransportsRequest/Response` | Liste transports TCP |
-| `StartTransportRequest/Response` | Démarrer transport |
-| `StopTransportRequest/Response` | Arrêter transport |
+| `GetPluginsRequest/Response` | Plugin list (ProviderId, DisplayName, IsAvailable) |
+| `GetPluginSettingsRequest/Response` | Settings of a plugin |
+| `ApplyPluginSettingsRequest/Response` | Applies a batch of settings with typed JSON values |
+| `GetPluginDataRequest/Response` | Plugin data |
+| `GetTransportsRequest/Response` | TCP transport list |
+| `StartTransportRequest/Response` | Start transport |
+| `StopTransportRequest/Response` | Stop transport |
 
 ---
 
-## Architecture des connecteurs
+## Connector architecture
 
-### Configurateur (WinUI 3, net8.0) — autonome
-- **JsonRpcClient** : TCP brut length-prefixed → `JsonDocument`
-- **HostClient** : wrapper typé au-dessus de JsonRpcClient, 20+ méthodes IPC
-- **HostSessionService** : résolution de connecteurs, découverte UDP, cache
-- **HostProviderEventsService** : client events TCP brut sur port+1
-- Tous les DTOs sont locaux (`Models/Contracts/`), identiques aux types `JIB.Sdk` (mêmes noms de champs = compatibilité JSON)
+### Configurator (WinUI 3, net8.0) — standalone
+- **JsonRpcClient**: raw length-prefixed TCP → `JsonDocument`
+- **HostClient**: typed wrapper over JsonRpcClient, 20+ IPC methods
+- **HostSessionService**: connector resolution, UDP discovery, cache
+- **HostProviderEventsService**: raw TCP events client on port+1
+- All DTOs are local (`Models/Contracts/`), identical to the `JIB.Sdk` types (same field names = JSON compatibility)
 
-### SimHub Plugin (net48, WPF) — déjà autonome
-- **PluginTcpClient** : TCP brut line-delimited, connexion persistante, auto-reconnect
-- JSON brut via Newtonsoft.Json JObject, aucun type partagé
+### SimHub Plugin (net48, WPF) — already standalone
+- **PluginTcpClient**: raw line-delimited TCP, persistent connection, auto-reconnect
+- Raw JSON via Newtonsoft.Json JObject, no shared type
 
-### Host (JIB.Service, net8.0) + plugins internes
-- JIB.Sdk utilisé uniquement en interne
-- IHostConnector supprimé
-- JIB.Connectors supprimé
-- DeviceHostServer gère les 3 listeners TCP + beacon UDP
+### Host (JIB.Service, net8.0) + internal plugins
+- JIB.Sdk used internally only
+- IHostConnector removed
+- JIB.Connectors removed
+- DeviceHostServer handles the 3 TCP listeners + UDP beacon
 
 ---
 
-## Ajout d'un futur plugin externe
+## Adding a future external plugin
 
-Pattern à suivre (cf. SimHub.JIB.Plugin) :
+Pattern to follow (cf. SimHub.JIB.Plugin):
 
-1. Client TCP brut (line-delimited JSON, port dédié)
+1. Raw TCP client (line-delimited JSON, dedicated port)
 2. Handshake + heartbeat
-3. Zéro référence à JIB.Sdk (contrats DTO dupliqués localement, ou JSON construit/déconstruit manuellement)
-4. JSON construit/déconstruit manuellement (Newtonsoft.Json JObject ou System.Text.Json JsonDocument)
+3. Zero reference to JIB.Sdk (DTO contracts duplicated locally, or JSON built/parsed manually)
+4. JSON built/parsed manually (Newtonsoft.Json JObject or System.Text.Json JsonDocument)
