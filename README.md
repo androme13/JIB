@@ -1,20 +1,17 @@
 # JIB — Jack In the Box
 
-**SimHub plugin & device host for StreamDock and Stream Deck hardware.**
+**Device host & configuration suite for StreamDock and Stream Deck hardware.**
 
-JIB bridges SimHub telemetry with StreamDock and Stream Deck LCD button boxes. Render live data on hardware keys, map physical controls to any action (keyboard, mouse, vJoy, media, system), manage multi-page touch layouts, and control LEDs — all from a native Windows Configurator.
+JIB renders live data on StreamDock and Stream Deck LCD button boxes. Map physical controls to any action (keyboard, mouse, vJoy, media, system), manage multi-page touch layouts, and control LEDs — all from a native Windows Configurator.
 
 ---
 
 ## Architecture
 
 ```
-SimHub.exe
-  └── SimHub.JIB.Plugin.dll  ────┐
-                                  │ TCP (port 16555, line-delimited JSON)
-JIB.Configurator.exe (WinUI 3) ───┤ TCP (port 16550, 4-byte length-prefix JSON)
-                                  │
-JIB.Service.exe (Windows host) ───┘
+JIB.Configurator.exe (WinUI 3) ───┐
+                                  │ TCP (port 16550, 4-byte length-prefix JSON)
+JIB.Service.exe (Windows host) ────┘
   ├── Plugins: SimHub, OBS, HTTP, Camera, Keyboard, Mouse, vJoy, Media, System Monitor, System Commands
   ├── SkiaSharp rendering (real-time CPU raster → JPEG)
   └── StreamDockNative.dll (C++ USB HID + SDK passthrough)
@@ -22,19 +19,34 @@ JIB.Service.exe (Windows host) ───┘
 
 - **JIB.Service** — background host managing hardware, plugins, rendering, and IPC
 - **JIB.Configurator** — WinUI 3 desktop application for visual editing
-- **SimHub.JIB.Plugin** — lives inside SimHub, streams telemetry to the host
 - **StreamDockNative** — C++ native layer for USB communication
 
-The Configurator and SimHub plugin communicate with the host over TCP. There is no shared DLL between them.
+Plugins are loaded from `Plugins/` by the host. The SimHub plugin is the one exception: it runs inside SimHub.exe and streams telemetry to the host over TCP (port 16555, line-delimited JSON). The Configurator communicates with the host over TCP; there is no shared DLL between them.
 
 ---
 
 ## Installation
 
-1. **Download** the latest ZIP from [GitHub Releases](https://github.com/androme13/JIB/releases)
-2. **Extract** the package into your SimHub directory
-3. **Launch** `JIB.Service.exe` to start the device host (or install as a Windows service)
-4. **Open** `JIB.Configurator.exe`, connect to the host, and start configuring
+### Prerequisites
+
+- **Visual C++ Redistributable x64 2015–2022** ([vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe))
+- Optional: **vJoy driver** for virtual joystick support
+
+### Manual mode (recommended)
+
+1. **Download** the latest ZIP from [GitHub Releases](https://github.com/androme13/JIB/releases) and extract it anywhere.
+2. **Start the host**: run `Host\JIB.Service.exe` (console mode on TCP port 16550; press Ctrl+C to stop).
+3. **Open** `Configurator\JIB.Configurator.exe` and connect to `localhost:16550`.
+
+### Windows service (optional)
+
+Run `.\install-service.ps1` from an elevated PowerShell to install the host as a Windows service in `C:\Program Files\JIB\` (automatic start, firewall rule, Start Menu shortcut). Use `.\update-service.ps1` to update an existing installation.
+
+### SimHub telemetry (optional)
+
+To add racing telemetry, copy the contents of `Plugins\External\SimHub\` into your SimHub installation folder and restart SimHub.
+
+Do not run the Configurator as Administrator, or drag-and-drop from Explorer into it may be blocked.
 
 ---
 
@@ -42,9 +54,9 @@ The Configurator and SimHub plugin communicate with the host over TCP. There is 
 
 ### Live telemetry display
 
-Real-time SimHub telemetry rendered as JPEG frames on device LCD keys. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
+Real-time telemetry rendered as JPEG frames on device LCD keys — SimHub racing data, system metrics, media levels, and more. Supports numeric gauges, bar gauges, text overlays, and state-dependent coloring (normal vs. alert states). Delta hashing avoids re-rendering frames that haven't changed.
 
-**Supported telemetry categories:** speed, RPM, gear, fuel, water/oil temperatures, turbo pressure, ERS, DRS, ABS, TC, brake bias, headlights, wipers, flags, cruise control, parking brake, retarder, diff lock, navigation, trucking data, and more.
+**Supported SimHub telemetry categories:** speed, RPM, gear, fuel, water/oil temperatures, turbo pressure, ERS, DRS, ABS, TC, brake bias, headlights, wipers, flags, cruise control, parking brake, retarder, diff lock, navigation, trucking data, and more.
 
 ### Physical controls & dispatch
 
@@ -52,14 +64,14 @@ Every hardware button, knob turn/press, touch zone, and swipe gesture can be map
 
 | Category | Examples |
 |---|---|
-| **SimHub Control Mapper** | Custom roles defined in SimHub |
-| **OBS Studio** | Stream, record, scenes, sources, virtual camera |
-| **HTTP / Webhook** | GET/POST/PUT/PATCH/DELETE to any URL |
 | **Keyboard** | Any key or hotkey combination |
 | **Mouse** | Click, double-click, scroll, move |
-| **vJoy** | Virtual joystick buttons (128) and axes (8) |
 | **Media** | Play/Pause, next/previous, volume, per-app audio |
+| **vJoy** | Virtual joystick buttons (128) and axes (8) |
 | **System** | Shutdown, restart, sleep, lock, brightness, monitor off |
+| **HTTP / Webhook** | GET/POST/PUT/PATCH/DELETE to any URL |
+| **OBS Studio** | Stream, record, scenes, sources, virtual camera |
+| **SimHub Control Mapper** | Custom roles defined in SimHub |
 | **Internal** | Touch page navigation |
 
 ### Touch pages & swipe navigation
@@ -96,9 +108,6 @@ Plugins have:
 
 ## Built-in plugins
 
-### SimHub
-Live telemetry from any racing simulator. Exposes hundreds of telemetry fields as assignable display functions. Also publishes SimHub Control Mapper roles and event triggers for bidirectional control. Game-aware: rebuilds path mappings automatically when the active simulator changes. Per-vehicle learned value profiles.
-
 ### Keyboard
 Map any StreamDock button to a keyboard key or key combination (modifiers + key). Dispatches Press/Release events to the OS for held actions like push-to-talk or modifier keys.
 
@@ -126,6 +135,9 @@ Send HTTP requests on button press. Configure up to 10 endpoints, each with: dis
 ### Camera
 Display a camera feed on device buttons. The source is configured per button — a local webcam or a network stream (MJPEG/RTSP). Zero external dependencies, streamed through the host rendering pipeline.
 
+### SimHub
+Live telemetry from any racing simulator. Exposes hundreds of telemetry fields as assignable display functions. Also publishes SimHub Control Mapper roles and event triggers for bidirectional control. Game-aware: rebuilds path mappings automatically when the active simulator changes. Per-vehicle learned value profiles. Requires the SimHub plugin copied into your SimHub installation (see [Installation](#installation)).
+
 ---
 
 ## How mapping works
@@ -136,7 +148,7 @@ Every rendered control has two parts:
 2. **mappings** — event triggers that run actions when the control is used.
 
 ### 1. Assign a display
-Drag a display source from the palette onto a control — SimHub telemetry, a System Monitor gauge, a Camera feed, a static image, and so on.
+Drag a display source from the palette onto a control — a system metric, a camera feed, SimHub telemetry, a static image, and so on.
 
 ### 2. Add events and actions
 Each control exposes event slots — `Press`, `Long press`, `Increment`, `Decrement`, `Swipe left`, `Swipe right`. Drop actions into an event slot: keyboard, mouse, OBS, HTTP, media, system, or navigation actions.
