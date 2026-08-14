@@ -15,7 +15,7 @@ SimHub.exe
 JIB.Configurator.exe (WinUI 3) ───┤ TCP (port 16550, 4-byte length-prefix JSON)
                                   │
 JIB.Service.exe (Windows host) ───┘
-  ├── Plugins: SimHub, OBS, HTTP, Keyboard, Mouse, vJoy, Media, System Monitor, System Commands
+  ├── Plugins: SimHub, OBS, HTTP, Camera, Keyboard, Mouse, vJoy, Media, System Monitor, System Commands
   ├── SkiaSharp rendering (real-time CPU raster → JPEG)
   └── StreamDockNative.dll (C++ USB HID + SDK passthrough)
 ```
@@ -64,7 +64,7 @@ Every hardware button, knob turn/press, touch zone, and swipe gesture can be map
 
 ### Touch pages & swipe navigation
 
-Touchscreen devices (N4, N4 Pro) support multiple main pages, each containing nested touch pages. Swipe left/right navigates between pages. A "home" page anchors the default view. Full CRUD from the Configurator.
+Touchscreen devices (N4, N4 Pro) support multiple main pages, each with its own touch pages and folders. Swipe left/right gestures can be mapped to navigation or other actions. A "home" page anchors the default view. Full CRUD from the Configurator.
 
 ### LED & brightness control
 
@@ -84,7 +84,7 @@ Feature transport (SDK vs. native HID) is resolved per device model, not via a g
 
 ### Plugin system
 
-JIB loads plugins from `Plugins/` at startup. Nine built-in plugins are included. Third-party plugins can be authored against the `JIB.Sdk` library.
+JIB loads plugins from `Plugins/` at startup. Ten built-in plugins are included. Third-party plugins can be authored against the `JIB.Sdk` library.
 
 Plugins have:
 - Typed settings (TextBox, Toggle, NumberBox, ComboBox, Endpoint)
@@ -123,20 +123,25 @@ Control OBS Studio via WebSocket v5. 8 built-in actions: toggle stream, record t
 ### HTTP / Webhook
 Send HTTP requests on button press. Configure up to 10 endpoints, each with: display name, URL, HTTP method (GET/POST/PUT/PATCH/DELETE), custom JSON headers, and request body. Configurable timeout (1–60 s). Last status code and request duration rendered on the assigned button. Health degrades when the last request failed.
 
+### Camera
+Display a camera feed on device buttons. The source is configured per button — a local webcam or a network stream (MJPEG/RTSP). Zero external dependencies, streamed through the host rendering pipeline.
+
 ---
 
 ## How mapping works
 
-Every hardware control follows the same mapping flow:
+Every rendered control has two parts:
 
-```
-Plugin Provider  →  Assignable Function  →  Dispatch Mode  →  Hardware Control
-```
+1. a **display** — what the control shows (a telemetry gauge, camera feed, or system metric);
+2. **mappings** — event triggers that run actions when the control is used.
 
-### 1. Choose a source
-Select a plugin provider (SimHub, OBS, HTTP, Keyboard, Mouse, vJoy, Media, System) and one of its assignable functions — a telemetry gauge, a keyboard key, a SimHub role, an OBS action, a webhook, a media command, or a system action.
+### 1. Assign a display
+Drag a display source from the palette onto a control — SimHub telemetry, a System Monitor gauge, a Camera feed, a static image, and so on.
 
-### 2. Pick a dispatch mode
+### 2. Add events and actions
+Each control exposes event slots — `Press`, `Long press`, `Increment`, `Decrement`, `Swipe left`, `Swipe right`. Drop actions into an event slot: keyboard, mouse, OBS, HTTP, media, system, or navigation actions.
+
+### 3. Pick a dispatch mode
 
 | Mode | Behaviour | Use for |
 |---|---|---|
@@ -144,7 +149,7 @@ Select a plugin provider (SimHub, OBS, HTTP, Keyboard, Mouse, vJoy, Media, Syste
 | **PulseOnly** | Instant one-shot trigger | Page navigation, mute, system commands |
 | **Auto** | Plugin-recommended default (fallback depends on `MappingTargetKind`) | General use |
 
-### 3. Assign to a hardware control
+### 4. Assign to a hardware control
 Bind the mapping to a physical button press/release, knob turn (left/right), knob press, touch zone tap, or swipe gesture (left/right). The Configurator shows a live preview as you edit.
 
 ### Hardware control types
@@ -212,15 +217,19 @@ The JIB Configurator is a WinUI 3 desktop application for visual editing.
 
 | Screen | Purpose |
 |---|---|
-| **Overview** | Host status at a glance |
-| **Devices** | Hardware inventory, capabilities, diagnostics per device |
-| **Controls** | Visual button layout editor, touch pages, mapping assignment |
-| **Plugins** | Plugin management — health, settings, enable/disable |
-| **Settings** | Host settings — palette, FPS, brightness, transport policy |
-| **Hosts** | LAN host discovery and connection |
-| **Transports** | TCP transport configuration |
+| **Infos** | Connection and runtime overview, active host, discovered hosts |
+| **Devices** | Hardware inventory and host-owned per-device settings (rotation, startup, palette, transport policy) |
+| **Controls** | Visual layout editor — scenes, pages, touch pages, display sources and mapping assignment |
+| **Plugins** | Plugin management — health, telemetry, settings, enable/disable |
+| **Datas** | Browse user-visible data published by plugins |
+| **Settings** | Host runtime tuning — render quality, FPS, brightness, screensaver, network access |
+| **Hosts** | Host discovery, identity, node administration, database |
+| **Transports** | Live transport monitoring |
+| **Dev** | Hardware bring-up and VID/PID compatibility |
+| **Debug** | Diagnostics — render route, pressure, USB probe, box validation |
 | **Logs** | Runtime log viewer |
-| **Debug** | Developer diagnostics |
+| **About** | Project information, version, links |
+| **Options** | Local Configurator preferences (theme, close-to-tray) |
 
 ### Composite save model
 
