@@ -11,7 +11,7 @@ JIB renders live data on StreamDock and Stream Deck LCD button boxes. Map physic
 ```
 JIB.Configurator.exe (WinUI 3) ───┐
                                   │ TCP (port 16550, 4-byte length-prefix JSON)
-JIB.Service.exe (Windows host) ────┘
+JIB.Service.exe (Windows host) ───┘
   ├── Plugins: SimHub, OBS, HTTP, Camera, Keyboard, Mouse, vJoy, Media, System Monitor, System Commands
   ├── SkiaSharp rendering (real-time CPU raster → JPEG)
   └── StreamDockNative.dll (C++ USB HID + SDK passthrough)
@@ -38,7 +38,9 @@ Plugins are loaded from `Plugins/` by the host. The SimHub plugin is the one exc
 2. **Start the host**: run `Host\JIB.Service.exe` (console mode on TCP port 16550; press Ctrl+C to stop).
 3. **Open** `Configurator\JIB.Configurator.exe` and connect to `localhost:16550`.
 
-### Windows service (optional)
+### Windows service (optional, not recommended during alpha)
+
+While JIB is still in alpha, prefer running the host in standalone / console mode. Installing it as a Windows service makes updates, logs, resets, and live diagnostics harder.
 
 Run `.\install-service.ps1` from an elevated PowerShell to install the host as a Windows service in `C:\Program Files\JIB\` (automatic start, firewall rule, Start Menu shortcut). Use `.\update-service.ps1` to update an existing installation.
 
