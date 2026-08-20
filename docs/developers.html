@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Building third-party JIB plugins against JIB.Sdk: authoring modes, plugin contracts, settings, health monitoring, and the IPC protocol." />
+    <meta property="og:title" content="JIB - For Developers" />
+    <meta property="og:description" content="Building third-party JIB plugins against JIB.Sdk: authoring modes, plugin contracts, settings, health monitoring, and the IPC protocol." />
+    <meta property="og:image" content="./logo.png" />
+    <meta name="theme-color" content="#0f1115" />
+    <title>JIB - For Developers</title>
+    <link rel="icon" href="./icon.png" sizes="any" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="developers">
+    <header class="topbar" id="topbar"></header>
+
+    <main id="top" class="wrap">
+        <div class="docs-hero">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="sep">&rsaquo;</span>
+                <span>Developers</span>
+            </nav>
+            <div class="card">
+                <div class="eyebrow">Documentation</div>
+                <h1 style="margin-bottom:10px;">Building plugins with JIB.Sdk</h1>
+                <p class="lead" style="max-width:900px;">
+                    Third-party plugins are authored against <code>JIB.Sdk</code>, the single shared contract for device-host plugins. A plugin publishes settings, catalogs, control states, and health that the Configurator renders automatically.
+                </p>
+            </div>
+        </div>
+
+        <div class="docs-layout">
+            <aside class="toc" id="toc" aria-label="Table of contents"></aside>
+            <article class="docs-prose card" id="guideContent">
+
+                <h2>Overview</h2>
+                <p>JIB loads plugins from <code>Plugins/</code> at host startup. Ten built-in plugins ship with the host, and external plugins can be dropped in the same way. Referencing <code>JIB.Sdk</code> is the only requirement; the Configurator needs no plugin-specific code.</p>
+                <p>Every plugin gets, for free:</p>
+                <ul>
+                    <li>typed settings with auto-generated editors in the Configurator;</li>
+                    <li>health monitoring (10 s interval, auto-disable after 5 consecutive failures);</li>
+                    <li>enable/disable per plugin from the Configurator;</li>
+                    <li>display metadata via the <code>[JibPlugin]</code> attribute.</li>
+                </ul>
+
+                <h2>Authoring modes</h2>
+                <h3>SDK-only</h3>
+                <p>A parameterless-constructor plugin that only references <code>JIB.Sdk</code>. Portable and suitable for third-party distribution.</p>
+                <h3>Internal host</h3>
+                <p>A plugin whose constructor receives <code>DeviceHostPluginServices</code>, giving full access to the <code>RuntimeProviderChangeTracker</code>, transports, and host services. Reserved for plugins shipped with the host.</p>
+
+                <h2>Key SDK concepts</h2>
+                <ul>
+                    <li><strong><code>IDeviceHostPlugin</code> / <code>DeviceHostPluginBase</code></strong> &mdash; the base plugin contract.</li>
+                    <li><strong><code>RuntimeProviderChangeTracker</code></strong> &mdash; push live state updates (catalog changes, control states) to the host and Configurator.</li>
+                    <li><strong><code>[JibPlugin]</code></strong> &mdash; display metadata (name, description, version).</li>
+                    <li><strong>Typed settings</strong> &mdash; <code>TextBox</code>, <code>Toggle</code>, <code>NumberBox</code>, <code>ComboBox</code>, <code>Endpoint</code>; the Configurator builds the editor.</li>
+                    <li><strong>Static vs. dynamic catalogs</strong> &mdash; choose based on whether functions are known at compile time.</li>
+                    <li><strong>Health monitoring</strong> &mdash; automatic, with a configurable disable threshold.</li>
+                </ul>
+
+                <h2>Publishing assignable functions</h2>
+                <p>For a function to appear in the <code>Display</code> palette, its <code>RuntimeFunctionDescriptor</code> must publish an explicit <code>FunctionKind</code> &mdash; in practice <code>Telemetry</code> or <code>HostIntegration</code>. Without it the function stays <code>Unknown</code> and is filtered out of the assignable list.</p>
+                <p>Actions can publish a recommended dispatch mode and the modes they support through the integration metadata, so the action card shows a correct <code>Execution</code> selector:</p>
+                <pre><code>{
+  "recommendedDispatchMode": "PulseOnly",
+  "supportedDispatchModes": ["PulseOnly", "PressRelease"]
+}</code></pre>
+
+                <h2>IPC protocol</h2>
+                <p>The Configurator and the SimHub plugin talk to the host over TCP with JSON, and there is no shared DLL between them. The full protocol &mdash; wire format, message types, discovery, and the envelope &mdash; is documented in the repository:</p>
+                <p><a class="btn btn-primary" href="https://github.com/androme13/JIB/blob/main/docs/IPC-Protocol.md" target="_blank" rel="noopener">Read IPC-Protocol.md</a></p>
+                <p>For an external plugin that needs to reach the host over TCP, follow the SimHub plugin pattern: raw TCP client, handshake plus heartbeat, zero reference to <code>JIB.Sdk</code>, and JSON built or parsed manually.</p>
+
+                <h2>Samples and contributions</h2>
+                <p>Sample plugins live in <code>Plugins/Samples/</code>. Contributions use the same issue templates as feature requests &mdash; open a pull request when you have a tested catalog entry or implementation.</p>
+                <div class="hero-actions">
+                    <a class="btn" href="https://github.com/androme13/JIB" target="_blank" rel="noopener">Open the repository</a>
+                    <a class="btn" href="https://github.com/androme13/JIB/compare" target="_blank" rel="noopener">Open a pull request</a>
+                </div>
+
+            </article>
+        </div>
+    </main>
+
+    <footer class="wrap footer" id="footer"></footer>
+
+    <button class="backtop" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="./data.js" defer></script>
+    <script src="./app.js" defer></script>
+</body>
+</html>

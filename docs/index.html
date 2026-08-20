@@ -3,50 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="JIB is a control deck host for StreamDock-compatible hardware, selected Elgato Stream Deck devices, telemetry displays, hardware controls, plugin actions, and packaged GitHub releases." />
+    <meta name="description" content="JIB is a distributed control deck host and Configurator for StreamDock-compatible hardware and selected Elgato Stream Deck devices. Run the host, the Configurator, and the SimHub plugin on separate machines." />
     <meta property="og:title" content="JIB - Control deck host" />
-    <meta property="og:description" content="Configure StreamDock-compatible and supported Stream Deck hardware for telemetry, physical controls, pages, LEDs, system actions, and plugin providers." />
+    <meta property="og:description" content="Configure StreamDock-compatible and supported Stream Deck hardware for telemetry, physical controls, pages, LEDs, system actions, and plugin providers - across multiple machines." />
     <meta property="og:image" content="./logo.png" />
     <meta name="theme-color" content="#0f1115" />
     <title>JIB - Control Deck Host</title>
     <link rel="icon" href="./icon.png" sizes="any" />
     <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
-    <header class="topbar">
-        <div class="wrap topbar-inner">
-            <a class="brand" href="#top" aria-label="JIB home">
-                <img class="brand-icon" src="icon.png" alt="" />
-                <span>
-                    <strong class="brand-title">JIB</strong>
-                    <span class="brand-subtitle">Jack In the Box</span>
-                </span>
-            </a>
-            <nav class="nav" aria-label="Primary navigation">
-                <a href="#features">Features</a>
-                <a href="#providers">Providers</a>
-                <a href="#workflow">Workflow</a>
-                <a href="#preview">Preview</a>
-                <a href="#compatibility">Compatibility</a>
-                <a href="#requests">Requests</a>
-                <a href="#latest">Download</a>
-                <a href="https://github.com/androme13/JIB" target="_blank" rel="noopener">GitHub</a>
-            </nav>
-        </div>
-    </header>
+<body data-page="home">
+    <header class="topbar" id="topbar"></header>
 
     <main id="top" class="wrap">
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-grid">
                 <div class="hero-copy">
                     <div class="eyebrow">Device host and configurator</div>
-                    <h1 id="hero-title">Run hardware controls, pages, and live displays from one Configurator.</h1>
+                    <h1 id="hero-title">Run hardware controls, pages, and live displays from anywhere on your network.</h1>
                     <p class="lead">
-                        JIB combines a Windows host, hardware drivers, plugin providers, and a desktop Configurator for StreamDock-compatible boxes and selected Elgato Stream Deck hardware. It maps keys, knobs, touch pages, LEDs, telemetry, media, OBS, input, HTTP, and system actions without relying on vendor profiles.
+                        JIB combines a Windows host, hardware drivers, plugin providers, and a desktop Configurator for StreamDock-compatible boxes and selected Elgato Stream Deck hardware. The host, the Configurator, and the SimHub plugin are independent processes connected over TCP, so they can each run on a different machine.
                     </p>
                     <div class="hero-actions">
                         <a class="btn btn-primary" id="heroDownloadBtn" href="#latest">Download latest package</a>
-                        <a class="btn" href="https://github.com/androme13/JIB/releases" target="_blank" rel="noopener">Open GitHub Releases</a>
+                        <a class="btn" href="architecture.html">How it connects</a>
                     </div>
                     <div class="hero-points" id="heroPoints"></div>
                 </div>
@@ -62,9 +42,54 @@
                     <div class="preview-foot">
                         <div class="metric"><span class="metric-value" id="releaseCount">-</span><span class="metric-label">published releases</span></div>
                         <div class="metric"><span class="metric-value" id="latestVersionStat">Checking</span><span class="metric-label">latest package</span></div>
-                        <div class="metric"><span class="metric-value">Up to 60 FPS</span><span class="metric-label">configurable render target</span></div>
+                        <div class="metric"><span class="metric-value">10</span><span class="metric-label">built-in providers</span></div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="section" id="architecture">
+            <div class="card">
+                <div class="section-head">
+                    <div>
+                        <h2>Distributed by design</h2>
+                        <p>Three independent processes talk over TCP. The host owns the USB hardware; the Configurator edits it; the SimHub plugin streams telemetry. Each can live on its own PC.</p>
+                    </div>
+                    <a class="btn" href="architecture.html">Read the full architecture</a>
+                </div>
+                <div class="topology">
+                    <div class="topology-node">
+                        <h4>SimHub plugin</h4>
+                        <span class="role">Inside SimHub.exe, on the sim rig PC</span>
+                        <div class="ports">
+                            <div class="port"><strong>Out:</strong> telemetry over TCP 16555</div>
+                        </div>
+                    </div>
+                    <div class="topology-edge">
+                        <span class="arrow">&rarr;</span>
+                        <span class="port-tag">TCP 16555</span>
+                    </div>
+                    <div class="topology-node">
+                        <h4>JIB.Service</h4>
+                        <span class="role">Windows host, owns the USB boxes</span>
+                        <div class="ports">
+                            <div class="port"><strong>In:</strong> Configurator 16550, SimHub 16555</div>
+                            <div class="port"><strong>UDP:</strong> discovery 16551</div>
+                        </div>
+                    </div>
+                    <div class="topology-edge">
+                        <span class="arrow">&rarr;</span>
+                        <span class="port-tag">TCP 16550</span>
+                    </div>
+                    <div class="topology-node">
+                        <h4>JIB.Configurator</h4>
+                        <span class="role">WinUI 3 desktop app, anywhere on the LAN</span>
+                        <div class="ports">
+                            <div class="port"><strong>Out:</strong> edits the host over TCP 16550</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="note">Keep the host next to the USB hardware. SimHub can stay on your racing PC, and the Configurator can run on your desk machine &mdash; all connected over the LAN.</p>
             </div>
         </section>
 
@@ -106,59 +131,40 @@
             </div>
         </section>
 
-        <section class="section" id="requests">
-            <div class="card request-card">
-                <div>
-                    <div class="eyebrow">Community requests</div>
-                    <h2>Need another game, action, plugin, or device?</h2>
-                    <p>
-                        Users can request new SimHub game profiles, provider actions, hardware validation, device support, or workflow improvements. Contributors can also open a pull request when they already have a tested profile, catalog entry, or implementation.
-                    </p>
-                    <div class="request-paths">
-                        <div>
-                            <strong>Request</strong>
-                            <span>Use a focused issue template for game profiles, device validation, plugin actions, or bugs.</span>
-                        </div>
-                        <div>
-                            <strong>Contribute</strong>
-                            <span>Fork the repository, make the change, then open a pull request for review.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="request-actions">
-                    <a class="btn btn-primary" href="https://github.com/androme13/JIB/issues/new?template=game_profile_request.yml" target="_blank" rel="noopener">Request a game profile</a>
-                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=device_validation_report.yml" target="_blank" rel="noopener">Report device validation</a>
-                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=plugin_action_request.yml" target="_blank" rel="noopener">Request an action</a>
-                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=bug_report.yml" target="_blank" rel="noopener">Report a bug</a>
-                    <a class="btn" href="https://github.com/androme13/JIB/compare" target="_blank" rel="noopener">Open a pull request</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="workflow">
+        <section class="section" id="install">
             <div class="card">
                 <div class="section-head">
                     <div>
-                        <h2>Map a control in three decisions</h2>
-                        <p>The Configurator keeps the workflow close to the device: choose a source, choose how it dispatches, then bind it to a real hardware target.</p>
+                        <h2>Quick start</h2>
+                        <p>Get from download to a live box in four steps. The full walkthrough lives in the user guide.</p>
+                    </div>
+                    <a class="btn" href="guide.html">Open the user guide</a>
+                </div>
+                <div class="grid-3">
+                    <div class="step">
+                        <div class="step-kicker">Step 1</div>
+                        <h3>Install prerequisites</h3>
+                        <p>Install the <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe" target="_blank" rel="noopener">Visual C++ Redistributable x64 2015&ndash;2022</a>. The <a href="https://vjoystick.sourceforge.io/" target="_blank" rel="noopener">vJoy driver</a> is optional, only for virtual joystick support.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-kicker">Step 2</div>
+                        <h3>Download and start the host</h3>
+                        <p>Extract the release package, run <code>Host\JIB.Service.exe</code>, and keep vendor applications closed when they compete for USB HID access.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-kicker">Step 3</div>
+                        <h3>Open the Configurator</h3>
+                        <p>Run <code>Configurator\JIB.Configurator.exe</code>, connect to <code>127.0.0.1:16550</code> (or a discovered LAN host), select the hardware, and build pages and mappings.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-kicker">Step 4</div>
+                        <h3>Add SimHub telemetry (optional)</h3>
+                        <p>Copy the contents of <code>Plugins\External\SimHub\</code> into your SimHub installation and restart SimHub to stream telemetry.</p>
                     </div>
                 </div>
-                <div class="workflow">
-                    <div class="workflow-step">
-                        <span>01</span>
-                        <h3>Choose a provider</h3>
-                        <p>Pick telemetry, keyboard, mouse, vJoy, media, OBS, HTTP, or a system action from the installed providers.</p>
-                    </div>
-                    <div class="workflow-step">
-                        <span>02</span>
-                        <h3>Set dispatch behavior</h3>
-                        <p>Use press/release for held state, pulse for one-shot triggers, or the provider default when it is obvious.</p>
-                    </div>
-                    <div class="workflow-step">
-                        <span>03</span>
-                        <h3>Assign hardware</h3>
-                        <p>Bind the action to LCD keys, knobs, touch buttons, swipe zones, LED rings, or device-level controls.</p>
-                    </div>
+                <div class="callout warning">
+                    <strong>Don't run the Configurator as Administrator</strong>
+                    Drag-and-drop from Explorer into the Configurator can be blocked when it runs elevated. Launch it normally.
                 </div>
             </div>
         </section>
@@ -172,34 +178,6 @@
                     </div>
                 </div>
                 <div class="gallery" id="mediaGallery"></div>
-            </div>
-        </section>
-
-        <section class="section" id="install">
-            <div class="card">
-                <div class="section-head">
-                    <div>
-                        <h2>Install path</h2>
-                        <p>The release page intentionally focuses on packaged assets, not source archives.</p>
-                    </div>
-                </div>
-                <div class="grid-3">
-                    <div class="step">
-                        <div class="step-kicker">Step 1</div>
-                        <h3>Download the package</h3>
-                        <p>Use the packaged release asset attached to GitHub Releases. Source archives are not the intended user install.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-kicker">Step 2</div>
-                        <h3>Start the host</h3>
-                        <p>Run the JIB host/runtime and keep vendor applications closed when they compete for USB HID access.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-kicker">Step 3</div>
-                        <h3>Configure the box</h3>
-                        <p>Open the Configurator, discover the host, select the hardware, then build pages and mappings.</p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -241,7 +219,6 @@
                         <h3>Status meaning</h3>
                         <ul>
                             <li><strong>Catalog matched:</strong> the device or model appears in the current runtime hardware catalog.</li>
-                            <li><strong>Family profile:</strong> the hardware family exists, but the exact commercial model is not listed as a USB catalog entry.</li>
                             <li><strong>Needs device validation:</strong> known provider path, but not strong enough to present as catalog-backed.</li>
                         </ul>
                     </div>
@@ -261,16 +238,7 @@
                             <li>Simultaneous vendor-app control is not guaranteed.</li>
                         </ul>
                     </div>
-                    <div class="panel">
-                        <h3>Validation wanted</h3>
-                        <p>Rows marked <strong>Needs device validation</strong> are known or expected families where owner feedback is still useful before presenting them as catalog-backed support.</p>
-                    </div>
-                    <div class="panel">
-                        <h3>Elgato status</h3>
-                        <p>Elgato support is implemented through JIB's driver/catalog path, but the listed Stream Deck devices still need owner validation before being presented as fully validated hardware.</p>
-                    </div>
                 </div>
-                <p class="note">Hardware rows are generated from the current repository documentation and catalog knowledge, not from a permanent compatibility guarantee.</p>
                 <div class="compat-tools">
                     <input class="search" id="compatSearch" type="search" placeholder="Filter brand, model, family..." aria-label="Filter compatibility table" />
                     <div class="chips" id="compatFilters"></div>
@@ -290,6 +258,7 @@
                         <tbody id="compatBody"></tbody>
                     </table>
                 </div>
+                <p class="note">Hardware rows are generated from the current repository documentation and catalog knowledge, not from a permanent compatibility guarantee.</p>
             </div>
         </section>
 
@@ -300,6 +269,7 @@
                         <h2>Troubleshooting first checks</h2>
                         <p>These are the checks users should try before reporting hardware or mapping issues.</p>
                     </div>
+                    <a class="btn" href="guide.html#quick-troubleshooting">Full troubleshooting table</a>
                 </div>
                 <div class="grid-3">
                     <div class="panel">
@@ -314,6 +284,35 @@
                         <h3>Rebrands and firmware</h3>
                         <p>Several boxes share USB identifiers. Manufacturer strings, firmware, and model revisions can affect detection.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="requests">
+            <div class="card request-card">
+                <div>
+                    <div class="eyebrow">Community requests</div>
+                    <h2>Need another game, action, plugin, or device?</h2>
+                    <p>
+                        Users can request new SimHub game profiles, provider actions, hardware validation, device support, or workflow improvements. Contributors can also open a pull request when they already have a tested profile, catalog entry, or implementation.
+                    </p>
+                    <div class="request-paths">
+                        <div>
+                            <strong>Request</strong>
+                            <span>Use a focused issue template for game profiles, device validation, plugin actions, or bugs.</span>
+                        </div>
+                        <div>
+                            <strong>Contribute</strong>
+                            <span>Fork the repository, make the change, then open a pull request for review.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="request-actions">
+                    <a class="btn btn-primary" href="https://github.com/androme13/JIB/issues/new?template=game_profile_request.yml" target="_blank" rel="noopener">Request a game profile</a>
+                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=device_validation_report.yml" target="_blank" rel="noopener">Report device validation</a>
+                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=plugin_action_request.yml" target="_blank" rel="noopener">Request an action</a>
+                    <a class="btn" href="https://github.com/androme13/JIB/issues/new?template=bug_report.yml" target="_blank" rel="noopener">Report a bug</a>
+                    <a class="btn" href="https://github.com/androme13/JIB/compare" target="_blank" rel="noopener">Open a pull request</a>
                 </div>
             </div>
         </section>
@@ -343,9 +342,9 @@
         </section>
     </main>
 
-    <footer class="wrap footer">
-        JIB project homepage powered by GitHub Releases - <a href="https://github.com/androme13/JIB" target="_blank" rel="noopener">Repository</a>
-    </footer>
+    <footer class="wrap footer" id="footer"></footer>
+
+    <button class="backtop" type="button" aria-label="Back to top">&uarr;</button>
 
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
         <button class="lightbox-close" type="button" id="lightboxClose" aria-label="Close image preview">&times;</button>
@@ -355,5 +354,3 @@
     <script src="./app.js" defer></script>
 </body>
 </html>
-
-

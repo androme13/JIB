@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="JIB Configurator user guide: connecting to a host, authoring controls, touch pages, mappings, LED colors, and every Configurator tab." />
+    <meta property="og:title" content="JIB - User Guide" />
+    <meta property="og:description" content="JIB Configurator user guide: connecting to a host, authoring controls, touch pages, mappings, LED colors, and every Configurator tab." />
+    <meta property="og:image" content="./logo.png" />
+    <meta name="theme-color" content="#0f1115" />
+    <title>JIB - User Guide</title>
+    <link rel="icon" href="./icon.png" sizes="any" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="guide">
+    <header class="topbar" id="topbar"></header>
+
+    <main id="top" class="wrap">
+        <div class="docs-hero">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="sep">&rsaquo;</span>
+                <span>User Guide</span>
+            </nav>
+            <div class="card">
+                <div class="eyebrow">Documentation</div>
+                <h1 style="margin-bottom:10px;">Configurator User Guide</h1>
+                <p class="lead" style="max-width:900px;">
+                    This guide explains how to use the JIB Configurator. It covers the <code>Controls</code> tab in detail and gives practical guidance for the other tabs.
+                </p>
+            </div>
+        </div>
+
+        <div class="docs-layout">
+            <aside class="toc" id="toc" aria-label="Table of contents"></aside>
+            <article class="docs-prose card" id="guideContent">
+
+                <h2>Connecting to a Host</h2>
+                <p>The Configurator edits hardware and mappings through a JIB host (the <code>JIB.Service</code> process). Most tabs are disabled until the Configurator is connected to one.</p>
+                <p>The connection controls live in the top header, next to the <code>JIB</code> badge.</p>
+                <p>To connect:</p>
+                <ol>
+                    <li>In the header, open the endpoint field.
+                        <ul>
+                            <li>Pick a host from the discovered endpoints list (hosts found through UDP discovery appear automatically), or</li>
+                            <li>Type the host address manually as <code>host:port</code>, for example <code>127.0.0.1:16550</code>.</li>
+                        </ul>
+                    </li>
+                    <li>Click <code>Connect</code>.</li>
+                </ol>
+                <p>The host listens on TCP port <code>16550</code> by default, so <code>127.0.0.1:16550</code> connects to a host running on the same machine.</p>
+                <p>The endpoint field remembers the last successful endpoint and pre-fills it on the next launch.</p>
+                <p>Connection states:</p>
+                <ul>
+                    <li><code>Connecting</code>: the button becomes <code>Cancel</code> while the connection is attempted;</li>
+                    <li><code>Connected</code>: a green status chip shows <code>Connected to &lt;endpoint&gt;</code>, a session summary and a <code>Disconnect</code> button appear, and the host-dependent tabs (<code>Controls</code>, <code>Devices</code>, <code>Plugins</code>, <code>Datas</code>, <code>Settings</code>, <code>Transports</code>, <code>Logs</code>) become enabled;</li>
+                    <li><code>Error</code>: a red status shows what failed.</li>
+                </ul>
+                <p>Common connection failures and what to check:</p>
+                <ul>
+                    <li><code>Invalid format. Use host:port</code>: the endpoint is not in <code>host:port</code> form;</li>
+                    <li><code>Connection timed out</code> or <code>Host unreachable</code>: the host is not running, is on another machine without LAN access, or the address is wrong;</li>
+                    <li><code>Connection failed</code>: the endpoint answered but the host handshake did not succeed.</li>
+                </ul>
+                <p>Check the <code>Infos</code> tab to confirm the connection state, the active host, and the discovered hosts on the network. Use <code>Disconnect</code> in the header to close the session.</p>
+
+                <div class="callout info">
+                    <strong>Connecting from another machine</strong>
+                    To reach a host on a different PC, that host must allow LAN connections (see the <code>Settings</code> tab) and the machine must be reachable. See the <a href="architecture.html">Architecture page</a> for the full picture.
+                </div>
+
+                <h2>Controls Tab</h2>
+                <p>The <code>Controls</code> tab is where you author what each physical control on a device does.</p>
+                <p>Use it to configure:</p>
+                <ul>
+                    <li>what a button, screen, touch area, or other rendered control displays;</li>
+                    <li>which input event triggers a mapping;</li>
+                    <li>which actions run when that event happens;</li>
+                    <li>scene, page, folder, touch-page, LED, and activation behavior for the selected device.</li>
+                </ul>
+                <p>The normal authoring flow is:</p>
+                <ol>
+                    <li>Select a device from <code>Device</code>.</li>
+                    <li>Select the scene and page you want to edit.</li>
+                    <li>Select a control in the <code>Canvas</code>.</li>
+                    <li>Assign a display source from the <code>Palette</code>, if the control can render content.</li>
+                    <li>Add an event slot, such as <code>Press</code>, <code>Long press</code>, <code>Increment</code>, or <code>Swipe left</code>.</li>
+                    <li>Add one or more actions to that event.</li>
+                    <li>Watch the global save state in the Configurator header and save when changes are pending.</li>
+                </ol>
+                <p>After a control is selected, the <code>Selected control</code> panel below the canvas exposes, in order, <code>Press behavior</code> (buttons), <code>Display</code> (render overrides), <code>Knob behavior</code> (knobs), and <code>Triggers and actions</code> (event slots and action cards).</p>
+
+                <h2>Quick Start</h2>
+                <p>This quick start creates a basic button with one display and one action.</p>
+                <ol>
+                    <li>Open <code>Controls</code>.</li>
+                    <li>Select the target box in <code>Device</code>.</li>
+                    <li>Select the scene and page you want to edit.</li>
+                    <li>Click a button in the <code>Canvas</code>.</li>
+                    <li>In the <code>Palette</code>, expand a provider, open a source group card, then drag one display source field onto the selected button.</li>
+                    <li>Drag <code>Press</code> from <code>Events</code> onto the same button or into <code>Triggers and actions</code>.</li>
+                    <li>Select the <code>Press</code> event slot if it is not already selected.</li>
+                    <li>Drag an action provider from <code>Actions</code> into the <code>Press</code> event.</li>
+                    <li>Expand the action card if it needs parameters.</li>
+                    <li>Save from the global Configurator header when the save chip reports pending changes.</li>
+                </ol>
+                <p>Expected result: the button shows the selected display source and runs the configured action when the <code>Press</code> event is triggered.</p>
+
+                <h2>Screen Layout</h2>
+                <p>The <code>Controls</code> tab has three working columns.</p>
+
+                <h3>Left Column</h3>
+                <p>The left column selects the editing context.</p>
+                <p><code>Scenes</code> manages scene-level layouts for the selected device.</p>
+                <p>Available scene operations:</p>
+                <ul>
+                    <li>create a scene with <code>+</code>;</li>
+                    <li>delete the selected scene when deletion is allowed;</li>
+                    <li>make the selected scene the default scene;</li>
+                    <li>lock or unlock the selected scene;</li>
+                    <li>rename a scene by double-clicking its name.</li>
+                </ul>
+                <p>Scene cards carry badges: <code>Default</code>, <code>Auto</code> (has activation rules), and <code>Locked</code>.</p>
+                <p><code>Pages</code> manages the pages and folders inside the selected scene.</p>
+                <p>Available page operations:</p>
+                <ul>
+                    <li>create a page with <code>+</code>;</li>
+                    <li>create a folder from the current page (folder icon), when the device supports folders;</li>
+                    <li>delete the selected page or folder when deletion is allowed;</li>
+                    <li>make the selected page the home page;</li>
+                    <li>export or import the page mappings;</li>
+                    <li>rename a page by double-clicking its name.</li>
+                </ul>
+                <p>Page cards carry an item-type chip (<code>Page</code> or <code>Folder</code>) and a <code>Home</code> badge. Folders are entered from the page list; a back breadcrumb in the <code>Canvas</code> header returns to the parent page.</p>
+                <p><code>Touch pages</code> appears only when the selected device and page support touch-page editing. Touch pages belong to the selected main page.</p>
+                <p>Available touch-page operations:</p>
+                <ul>
+                    <li>create a touch page with <code>+</code>;</li>
+                    <li>delete the selected touch page when at least one valid touch page remains;</li>
+                    <li>make the selected touch page the home touch page;</li>
+                    <li>rename a touch page by double-clicking its name.</li>
+                </ul>
+                <p><code>Activation</code> lets a scene become active automatically when a process is running or focused.</p>
+                <p>For each activation rule:</p>
+                <ul>
+                    <li>add one or more programs with <code>Add program</code> (browse for a <code>.exe</code>, <code>.com</code>, <code>.bat</code> or <code>.cmd</code> file) or by dropping a file onto the rule card;</li>
+                    <li>remove a program individually with its delete button;</li>
+                    <li>enable <code>Require focus</code> when the scene should activate only while a listed program is focused;</li>
+                    <li>enable or disable the rule with <code>Rule enabled</code>;</li>
+                    <li>remove the rule with <code>Delete rule</code>.</li>
+                </ul>
+                <p>The scene activates when any listed program matches. You can also drop a program file onto the <code>Activation</code> panel to create a new rule pre-filled with that program.</p>
+
+                <h3>Center Column</h3>
+                <p>The center column is the main authoring area.</p>
+                <p><code>Canvas</code> shows the selected device surface. It is the preferred place to select a control and to drop display sources, events, actions, images, programs, or existing assignments. A breadcrumb and a back button in the header track folder navigation. The canvas also hosts the device backdrop button and the <code>LED colors</code> editor.</p>
+                <p><code>Selected control</code> appears after a control is selected. It contains the editors that apply to that control: <code>Press behavior</code>, <code>Display</code>, <code>Knob behavior</code>, and <code>Triggers and actions</code>.</p>
+
+                <h3>Right Column</h3>
+                <p>The right column contains the <code>Palette</code>.</p>
+                <p>The palette is split into:</p>
+                <ul>
+                    <li><code>Display</code>: runtime display sources exposed by providers, grouped per provider and per source group;</li>
+                    <li><code>Events</code>: event slots supported by the selected control;</li>
+                    <li><code>Actions</code>: executable actions exposed by mapping providers.</li>
+                </ul>
+                <p>The <code>Global search</code> field filters display sources, events, and actions at the same time. Results stay grouped by section, and the palette shows a numbered hint (1. pick a display source, 2. add the trigger, 3. drag an action).</p>
+
+                <h2>Screenshots</h2>
+                <p>The full <code>Controls</code> tab combines the context selectors, device canvas, selected-control editor, and palette in one workspace.</p>
+                <p><img src="medias/Control tab 1.png" alt="Controls tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+                <p>The selected-control area is where display, events, actions, and control-specific behavior are edited after a canvas selection.</p>
+                <p><img src="medias/Control tab 2.png" alt="Controls selected-control editor" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h2>Device Selection</h2>
+                <p>Start by selecting a device in the <code>Device</code> combo box.</p>
+                <p>If <code>Controls</code> is disabled, the Configurator is not connected to a host. If the device list is empty, check the <code>Devices</code> tab and the physical USB connection.</p>
+                <p>Each device owns its own complete layout, independent from every other box. The hierarchy is:</p>
+                <pre><code>Box
+&rsaquo; Scene (scene-1, scene-2, &hellip;)
+     &rsaquo; Page (page-1, page-2, &hellip;)
+     &brvbar;    &rsaquo; Touch pages (touch-1, touch-2, &hellip;)
+     &rsaquo; Folder</code></pre>
+                <p>Scenes, pages, touch pages, folders, mappings, and scene-activation rules are all scoped to the selected box. Editing a scene or page on one box never affects another box, even if two boxes happen to use the same scene or page name.</p>
+                <p>The header chips show the current save state, the loaded controls summary, and the selected control status/source when a control is selected. The header also hosts the device-level <code>Export device</code> and <code>Import device</code> actions.</p>
+
+                <h2>Canvas</h2>
+                <p>The <code>Canvas</code> represents the physical facade of the selected device. Click a rendered button, knob, touch area, swipe affordance, or other visible control to select it.</p>
+                <p>When a control is selected, the <code>Selected control</code> panel updates below the canvas.</p>
+                <p>The canvas accepts these drag-and-drop operations:</p>
+                <ul>
+                    <li>drag a display source from the palette onto a control to assign what it displays;</li>
+                    <li>drag an <code>Event</code> from the palette onto a compatible control to create that event slot;</li>
+                    <li>drag an <code>Action</code> from the palette onto a compatible control to add it to the selected or resolved event slot;</li>
+                    <li>drag an existing configured control assignment to another control to move or swap assignments;</li>
+                    <li>drop an image file onto a rendered control to assign a static display image;</li>
+                    <li>drop a supported program file onto a control to create a program launch action.</li>
+                </ul>
+                <p>Supported image drops include common image files such as <code>png</code>, <code>jpg</code>, <code>jpeg</code>, <code>bmp</code>, and <code>webp</code>.</p>
+                <p>Supported program drops include <code>exe</code>, <code>com</code>, <code>bat</code>, and <code>cmd</code>.</p>
+                <p>Rendered controls that support two channels show separate <code>Primary</code> and <code>Secondary</code> drop zones during a display-source drag (touch buttons split left/right; other buttons split top/bottom). Dropping a display source assigns only the targeted slot, so primary and secondary can point to different provider sources.</p>
+                <p>The canvas also shows a camera button in the top-left corner of the device backdrop (touchscreen background area) to set or clear the page background image. See <a href="#background-image">Background Image</a>.</p>
+
+                <h3>Canvas Context Menu</h3>
+                <p>Right-click a control (button, knob, touch area, or swipe control) in the canvas to open its context menu.</p>
+                <p>Available actions:</p>
+                <ul>
+                    <li><code>Export mapping...</code>: export the selected control mapping to a file;</li>
+                    <li><code>Import mapping...</code>: import a mapping file into the selected control;</li>
+                    <li><code>Set display image...</code>: choose an image file and use it as the control's static display;</li>
+                    <li><code>Clear display</code>: remove the display assignment without clearing the event mapping;</li>
+                    <li><code>Clear mapping</code>: clear both display and event/action mapping for the control.</li>
+                </ul>
+                <p>Use <code>Clear display</code> when you only want to remove what the control shows. Use <code>Clear mapping</code> when you want to remove the control assignment itself (action slots, display bindings, render profile, and behavior).</p>
+
+                <h3>Background Image</h3>
+                <p>Each page can show a background image on the touchscreen/display area. The background is edited directly from the canvas.</p>
+                <p>Set or change a background image:</p>
+                <ul>
+                    <li>Right-click the device backdrop (the touchscreen background area) and choose <code>Set background image...</code>, or</li>
+                    <li>Click the camera button in the top-left corner of the backdrop, then choose <code>Set background image...</code>.</li>
+                </ul>
+                <p>The backdrop context menu offers:</p>
+                <ul>
+                    <li><code>Set background image...</code>: choose an image for the current page background;</li>
+                    <li><code>Set background image for all pages...</code>: apply the image to every non-hardware page at once;</li>
+                    <li><code>Clear background image</code>: remove the background image for the current page;</li>
+                    <li><code>Clear background image for all pages</code>: remove the background image from every page.</li>
+                </ul>
+                <p>The page background is a runtime layout image, saved with the page. It is distinct from the persistent <code>Startup background</code> written to the box ROM in the <code>Devices</code> tab, which survives a device reboot.</p>
+
+                <h2>Touch Pages</h2>
+                <p>Touch pages are scoped to the selected main page. Changing the main page changes the available touch pages.</p>
+                <p>A touch page can be selected from the left <code>Touch pages</code> panel. On compatible layouts, the canvas also shows a touch-page strip under the preview surface.</p>
+                <p>Important behavior:</p>
+                <ul>
+                    <li>selecting a touch page changes the touch surface being edited;</li>
+                    <li>creating a touch page selects it;</li>
+                    <li>deleting a touch page selects a valid remaining touch page;</li>
+                    <li>setting a touch page as home affects only the current main page;</li>
+                    <li>renaming a touch page does not move it to another main page.</li>
+                </ul>
+                <p>Touch pages are not folders. A folder is a local navigation sub-page. A touch page is an alternate touch surface attached to the active main page.</p>
+
+                <h2>Swipe Controls</h2>
+                <p>On devices that expose swipe input, the canvas shows <code>Swipe left</code> and <code>Swipe right</code>.</p>
+                <p>Both gestures belong to the same logical <code>swipe</code> control, but they target different event slots:</p>
+                <ul>
+                    <li><code>Swipe left</code> maps to <code>Decrement</code>;</li>
+                    <li><code>Swipe right</code> maps to <code>Increment</code>.</li>
+                </ul>
+                <p>Clicking <code>Swipe left</code> or <code>Swipe right</code> selects the shared swipe control and focuses the matching gesture in the mapping editor.</p>
+                <p>It does not change the active touch page. Touch-page navigation is done through the touch-page selector or through runtime navigation actions.</p>
+                <p>The swipe control is scoped per touch page: each touch page has its own swipe mapping, so you can assign different <code>Swipe left</code> / <code>Swipe right</code> actions on each touch page.</p>
+
+                <h2>Selected Control</h2>
+                <p>The <code>Selected control</code> panel is shown after a control is selected from the canvas.</p>
+                <p>It follows this order:</p>
+                <ol>
+                    <li><code>Press behavior</code>, when the control is a button or touch button.</li>
+                    <li><code>Display</code>, when the control supports appearance/render settings.</li>
+                    <li><code>Knob behavior</code>, when the selected control is a knob.</li>
+                    <li><code>Triggers and actions</code>, when the control supports editable mappings.</li>
+                </ol>
+                <p>Sections appear only when they apply to the selected control.</p>
+
+                <h2>Press Behavior</h2>
+                <p><code>Press behavior</code> appears for buttons and touch buttons that support configurable press behavior.</p>
+                <p>Available modes:</p>
+                <ul>
+                    <li><code>Selection</code>: pressing the button only changes the current selection.</li>
+                    <li><code>Selection + event</code>: pressing the button changes selection and dispatches its event mappings.</li>
+                    <li><code>Event</code>: pressing the button dispatches mappings without changing selection.</li>
+                    <li><code>Select, then event</code>: the first press selects the button; later presses dispatch mappings while it stays selected.</li>
+                </ul>
+                <p>Use <code>Selection + event</code> for a button that should both become the active editor context and run its mapping. Use <code>Event</code> when pressing the button should only execute behavior.</p>
+
+                <h2>Display</h2>
+                <p><code>Display</code> controls the local visual output of the selected rendered control.</p>
+                <p>The recommended starting point is to drag a display source from the palette onto a control in the canvas. After that, edit the resulting render settings in the <code>Display</code> section.</p>
+                <p>The <code>Display</code> section is composed of collapsible panels:</p>
+                <ul>
+                    <li><code>Trigger</code>: optional triggered outputs (background, button background, and LEDs) that fire when the selected visual source is in a triggered state. Includes the visual trigger source selector, default trigger switches, warning/alert colors, and LED scope.</li>
+                    <li><code>Animation</code>: how triggered outputs animate (<code>Blink</code> or <code>Breath</code> at a chosen speed, or <code>None</code> to keep a steady color).</li>
+                    <li><code>Primary</code> / <code>Secondary</code> channels: per-channel editors for the rendered lanes, with title, thresholds, value maps, icons, trends, and other function-specific options.</li>
+                </ul>
+                <p>Available settings depend on:</p>
+                <ul>
+                    <li>the selected display source;</li>
+                    <li>the selected control type;</li>
+                    <li>the selected hardware family;</li>
+                    <li>provider metadata and defaults.</li>
+                </ul>
+                <p>Each channel exposes its own <code>Show title</code>, <code>Channel title</code>, <code>Display text</code>, <code>Display icon</code>, and value-map options. A <code>Reset to defaults</code>, <code>Reload host values</code>, and <code>Discard changes</code> toolbar sits at the bottom of the section, next to the save-state chip.</p>
+                <p>Knobs do not show render override editing in this panel. They use <code>Knob behavior</code> and mapping events instead.</p>
+
+                <h3>Source Parameters</h3>
+                <p>Source-specific parameters, such as the camera source used by a camera/webcam display function, appear as a generic <code>Source parameters</code> editor inside the selected <code>Primary</code> or <code>Secondary</code> channel tab rather than as a separate panel.</p>
+                <p>For camera sources, choose between a local webcam detected by the host and a network stream URL (such as an RTSP or MJPEG stream). If no local webcam is detected, use a network URL or check the host machine camera availability.</p>
+
+                <h2>Triggers and Actions</h2>
+                <p>Mappings are organized as event slots. Actions are always stored inside an event slot.</p>
+                <p>The editor is titled <code>Triggers and actions</code>.</p>
+                <p>At the top of the editor:</p>
+                <ul>
+                    <li><code>Export mapping to file</code> exports the selected control mapping;</li>
+                    <li><code>Import mapping from file</code> imports a mapping into the selected control;</li>
+                    <li><code>Reload</code> reloads the mapping editor from the current source state.</li>
+                </ul>
+                <p>When no events are configured, the empty drop zone says <code>No events configured</code>. Drag an event from the palette to create the first event slot.</p>
+
+                <h3>Event Slots</h3>
+                <p>Supported event slots depend on the selected control.</p>
+                <p>Common event slots include:</p>
+                <ul>
+                    <li><code>Press</code>;</li>
+                    <li><code>Long press</code>;</li>
+                    <li><code>Increment</code>;</li>
+                    <li><code>Decrement</code>;</li>
+                    <li><code>Dial press</code>;</li>
+                    <li><code>Swipe left</code>;</li>
+                    <li><code>Swipe right</code>.</li>
+                </ul>
+                <p>The palette disables or hides event slots that do not apply to the selected control.</p>
+                <p>Each event slot can be selected, removed, and filled with action cards.</p>
+                <p>For <code>Long press</code>, the event slot exposes <code>Hold threshold</code>.</p>
+                <ul>
+                    <li>Default: <code>500 ms</code>.</li>
+                    <li>Allowed range: <code>100</code> to <code>5000 ms</code>.</li>
+                </ul>
+                <p>For pulse-style events, the event slot can expose <code>Pulse duration</code>.</p>
+                <ul>
+                    <li>Default: <code>10 ms</code>.</li>
+                    <li>Allowed range: <code>1</code> to <code>100 ms</code>.</li>
+                </ul>
+
+                <h3>Action Cards</h3>
+                <p>An action card represents one action inside one event slot.</p>
+                <p>An event can contain multiple actions. Their order is the execution order. Drag action cards within the event slot to reorder them.</p>
+                <p>Each action card can expose:</p>
+                <ul>
+                    <li>a drag handle;</li>
+                    <li>a provider icon;</li>
+                    <li>an action name and recap;</li>
+                    <li>an <code>On / Off</code> toggle when the action is configurable;</li>
+                    <li>an edit button;</li>
+                    <li>a remove button;</li>
+                    <li>action-specific fields when expanded.</li>
+                </ul>
+                <p>Examples of action-specific fields:</p>
+                <ul>
+                    <li>keyboard capture area for keyboard shortcuts;</li>
+                    <li><code>Trigger behavior</code> dispatch mode;</li>
+                    <li>mouse movement or absolute coordinates;</li>
+                    <li>target folder, page, or touch page;</li>
+                    <li><code>Wrap around</code> for navigation actions that support wrapping;</li>
+                    <li>delay duration for wait actions;</li>
+                    <li>program path, arguments, working directory, and <code>Show window</code>;</li>
+                    <li>program close path and <code>Force close if needed</code>;</li>
+                    <li>HTTP URL, method, headers, body, and timeout override.</li>
+                </ul>
+                <p>Actions available in the palette depend on installed/running plugins and the selected mapping context.</p>
+
+                <h2>Knob Behavior</h2>
+                <p><code>Knob behavior</code> appears for controls that support knob behavior.</p>
+                <p>Available modes:</p>
+                <ul>
+                    <li><code>Autonomous</code>: the knob uses its own mapping families and actions.</li>
+                    <li><code>Button selected</code>: the knob is reserved to serve the currently selected button.</li>
+                </ul>
+                <p>When a knob is in <code>Button selected</code> mode, its own mappings are not editable. Switch it back to <code>Autonomous</code> to edit knob mappings directly.</p>
+
+                <h2>Palette Behavior</h2>
+                <p>The palette is context-aware.</p>
+                <p><code>Display</code> remains available as the starting point for assigning what a control shows. Display sources are grouped per provider, then per source group. Expand a provider, then click a source group card to browse its fields, or drag the group card to assign the default.</p>
+                <p><code>Events</code> requires a selected control that exposes editable event mappings.</p>
+                <p><code>Actions</code> requires an active event slot. If no event is selected or created, the palette reports that an event must be created or selected first.</p>
+                <p>Typical sequence:</p>
+                <ol>
+                    <li>Expand a provider under <code>Display</code>, open a source group, and drop a source field onto the control.</li>
+                    <li>Drop an <code>Event</code> onto the control or into the <code>Triggers and actions</code> drop zone.</li>
+                    <li>Select the event slot.</li>
+                    <li>Drop an <code>Action</code> into that event slot.</li>
+                </ol>
+                <p>If a section is blocked, read its inline explanation. The most common causes are:</p>
+                <ul>
+                    <li>no control selected;</li>
+                    <li>selected control does not support editable mappings;</li>
+                    <li>selected knob is in <code>Button selected</code> mode;</li>
+                    <li>no event slot exists yet;</li>
+                    <li>selected event kind is not supported by the selected control.</li>
+                </ul>
+
+                <h2>Common Recipes</h2>
+                <p>These recipes describe the fastest path for common <code>Controls</code> tasks.</p>
+
+                <h3>Create a Simple Button</h3>
+                <p>Use this when you want one button to display a value and execute one action.</p>
+                <ol>
+                    <li>Select the target device, scene, and page.</li>
+                    <li>Click the button in the <code>Canvas</code>.</li>
+                    <li>Drag a provider display source from <code>Display</code> onto the button.</li>
+                    <li>Drag <code>Press</code> from <code>Events</code> onto the button.</li>
+                    <li>Drag an action provider from <code>Actions</code> into the <code>Press</code> event slot.</li>
+                    <li>Expand the action card and set any required fields.</li>
+                    <li>Save from the global header if changes are pending.</li>
+                </ol>
+
+                <h3>Assign a Keyboard Shortcut</h3>
+                <p>Use this when a button should press a keyboard key or shortcut.</p>
+                <ol>
+                    <li>Select the target button in the <code>Canvas</code>.</li>
+                    <li>Create or select the event slot that should trigger the shortcut, usually <code>Press</code>.</li>
+                    <li>Drag the keyboard action provider from <code>Actions</code> into the event slot.</li>
+                    <li>Open the action card editor.</li>
+                    <li>Click the keyboard capture area.</li>
+                    <li>Press the key or key combination.</li>
+                    <li>Save from the global header.</li>
+                </ol>
+                <p>If the keyboard action appears as <code>None</code>, open the card and capture the shortcut on the card.</p>
+
+                <h3>Launch a Program</h3>
+                <p>Use this when a button should start an executable or script.</p>
+                <p>Fast path:</p>
+                <ol>
+                    <li>Drag an <code>.exe</code>, <code>.com</code>, <code>.bat</code>, or <code>.cmd</code> file from Explorer onto the target control in the <code>Canvas</code>.</li>
+                    <li>Confirm the created program-launch action card.</li>
+                    <li>Save from the global header if changes are pending.</li>
+                </ol>
+                <p>Manual path:</p>
+                <ol>
+                    <li>Select the target control.</li>
+                    <li>Create or select the event slot that should launch the program.</li>
+                    <li>Drag the program-launch action from <code>Actions</code> into the event slot.</li>
+                    <li>Set <code>Program path</code>.</li>
+                    <li>Optionally set <code>Arguments</code>, <code>Working directory</code>, and <code>Show window</code>.</li>
+                    <li>Save from the global header.</li>
+                </ol>
+
+                <h3>Set a Static Image</h3>
+                <p>Use this when a rendered button should show a fixed image instead of a runtime value.</p>
+                <p>Fast path:</p>
+                <ol>
+                    <li>Drag a supported image file onto the rendered control in the <code>Canvas</code>.</li>
+                    <li>Save if the global save state reports pending changes.</li>
+                </ol>
+                <p>Context-menu path:</p>
+                <ol>
+                    <li>Right-click the target control in the <code>Canvas</code>.</li>
+                    <li>Choose <code>Set display image...</code>.</li>
+                    <li>Pick a supported image file.</li>
+                    <li>Save if needed.</li>
+                </ol>
+                <p>Supported image types include <code>png</code>, <code>jpg</code>, <code>jpeg</code>, <code>bmp</code>, and <code>webp</code>.</p>
+
+                <h3>Set a Page Background</h3>
+                <p>Use this when the touchscreen/display area should show a fixed background image for the current page.</p>
+                <ol>
+                    <li>Select the target device, scene, and page.</li>
+                    <li>In the <code>Canvas</code>, click the camera button in the top-left corner of the backdrop, or right-click the backdrop itself.</li>
+                    <li>Choose <code>Set background image...</code> and pick a supported image file.</li>
+                    <li>Save from the global header if changes are pending.</li>
+                </ol>
+                <p>To apply the same background to every non-hardware page, choose <code>Set background image for all pages...</code> instead. To remove the current page background, use <code>Clear background image</code>; to remove it from every page, use <code>Clear background image for all pages</code>.</p>
+                <p>This background is a runtime layout image saved with the page. For a background that survives a device reboot, use <code>Startup background</code> in the <code>Devices</code> tab.</p>
+
+                <h3>Navigate to a Page or Touch Page</h3>
+                <p>Use this when a control should move the active device layout.</p>
+                <ol>
+                    <li>Select the target control.</li>
+                    <li>Create or select the event slot that should navigate.</li>
+                    <li>Drag the navigation action from <code>Actions</code> into the event slot.</li>
+                    <li>Open the action card editor.</li>
+                    <li>Choose the target folder, page, or touch page.</li>
+                    <li>Enable <code>Wrap around</code> only when cyclic navigation is wanted and the action supports it.</li>
+                    <li>Save from the global header.</li>
+                </ol>
+                <p>Touch-page targets are scoped to the current main page.</p>
+
+                <h3>Configure a Long Press</h3>
+                <p>Use this when a button should execute a different action after being held.</p>
+                <ol>
+                    <li>Select the target button.</li>
+                    <li>Drag <code>Long press</code> from <code>Events</code> into the mapping editor.</li>
+                    <li>Set <code>Hold threshold</code>.</li>
+                    <li>Add one or more actions to the <code>Long press</code> event.</li>
+                    <li>Save from the global header.</li>
+                </ol>
+                <p>The default hold threshold is <code>500 ms</code>. The allowed range is <code>100</code> to <code>5000 ms</code>.</p>
+
+                <h3>Configure Swipe Left and Swipe Right</h3>
+                <p>Use this on devices that expose swipe gestures.</p>
+                <ol>
+                    <li>Click <code>Swipe left</code> below the canvas.</li>
+                    <li>Create the focused swipe event if the editor says the slot does not exist.</li>
+                    <li>Add actions for <code>Swipe left</code>.</li>
+                    <li>Click <code>Swipe right</code>.</li>
+                    <li>Create the focused swipe event if needed.</li>
+                    <li>Add actions for <code>Swipe right</code>.</li>
+                    <li>Save from the global header.</li>
+                </ol>
+                <p>Remember that both gestures edit the same logical <code>swipe</code> control. <code>Swipe left</code> maps to <code>Decrement</code>; <code>Swipe right</code> maps to <code>Increment</code>.</p>
+                <p>The swipe mapping is per touch page: configure it on each touch page where you want swipe actions.</p>
+
+                <h2>LED Colors</h2>
+                <p><code>LED colors</code> appears inside the canvas area, below the device surface, when the selected device exposes configurable LEDs.</p>
+                <p>Available controls can include:</p>
+                <ul>
+                    <li><code>Brightness</code>;</li>
+                    <li>a <code>Global helper</code> with <code>Global color</code> and <code>Apply to all LEDs</code>;</li>
+                    <li>per-LED color editors;</li>
+                    <li>reset to default LED colors.</li>
+                </ul>
+                <p>The panel status chip reports the current LED state or apply progress.</p>
+
+                <h2>Import and Export</h2>
+                <p>The top-right buttons in the <code>Controls</code> header operate at device level:</p>
+                <ul>
+                    <li><code>Export device</code>: export mappings for the selected device;</li>
+                    <li><code>Import device</code>: import mappings into the selected device.</li>
+                </ul>
+                <p>The <code>Pages</code> toolbar operates at page level with its own <code>Export</code> and <code>Import</code> actions.</p>
+                <p>The canvas context menu and <code>Triggers and actions</code> toolbar operate at selected-control level:</p>
+                <ul>
+                    <li>export/import only the selected control mapping.</li>
+                </ul>
+                <p>Before importing, verify the selected device and control context. Imports apply to the current target selected in the Configurator.</p>
+
+                <h2>Save and Refresh</h2>
+                <p>The Configurator uses a global save flow. There is no separate save button per <code>Controls</code> panel.</p>
+                <p>Use the save state chip in the header to know whether changes are pending, saving, saved, or failed. Use the global save button when changes are pending.</p>
+                <p>The following edits normally create pending changes and rely on the global save command:</p>
+                <ul>
+                    <li>changing <code>Press behavior</code>;</li>
+                    <li>changing <code>Knob behavior</code>;</li>
+                    <li>editing render/display options in the selected-control panel;</li>
+                    <li>adding, removing, or reordering event slots;</li>
+                    <li>adding, removing, reordering, enabling, disabling, or editing action cards;</li>
+                    <li>changing long-press thresholds or pulse durations;</li>
+                    <li>editing scene activation rules.</li>
+                </ul>
+                <p>Some canvas operations apply through a direct host call and may save immediately as part of the operation:</p>
+                <ul>
+                    <li>assigning a display source by dropping it onto a control;</li>
+                    <li>clearing a control mapping from the canvas context menu;</li>
+                    <li>moving or swapping an existing configured control assignment;</li>
+                    <li>assigning or clearing a static display image.</li>
+                </ul>
+                <p>Some page, scene, touch-page, import, export, and LED operations also talk directly to the host. After those operations, still check the global save chip before moving on.</p>
+                <p>Rule of thumb: after every meaningful edit, look at the global save state. If it reports pending changes, use the global save button.</p>
+                <p>Use <code>Refresh</code> to reload state from the host if the displayed state looks stale.</p>
+                <p>After a successful save, the Configurator reloads the composite workspace state from the host so the canvas, selected control, mappings, and local editor chips are aligned with the saved source of truth.</p>
+
+                <h2>Other Configurator Tabs</h2>
+                <p>The Configurator uses the left navigation rail to separate monitoring, authoring, device setup, host setup, diagnostics, and local application options.</p>
+                <p>Some tabs are always available. Tabs that require host data are enabled only after the Configurator is connected to a JIB host.</p>
+
+                <h3>Infos Tab</h3>
+                <p><code>Infos</code> is the connection and runtime overview. Its header shows the Configurator build version and the current connection status.</p>
+                <p>Use it to answer these questions before editing:</p>
+                <ul>
+                    <li>is the Configurator connected to a host;</li>
+                    <li>which runtime and hardware route are preferred;</li>
+                    <li>which host is active;</li>
+                    <li>which devices and plugins are visible;</li>
+                    <li>whether a newer release is available.</li>
+                </ul>
+                <p>The <code>Update</code> panel reports release availability and provides <code>Open release</code> and <code>All releases</code> buttons when update information is available.</p>
+                <p>The <code>Session</code> panel shows whether there is an active connection. When disconnected, it explains that a host connection is needed before runtime routing, active devices, and published plugins can be shown. When connected, it reports the <code>Preferred runtime</code> and <code>Preferred hardware</code> routes.</p>
+                <p>The <code>Active host</code> panel summarizes the connected machine, host version, hardware line, active device, active plugins, and plugin health detail. Header chips show the plugins summary and an overall plugin health chip.</p>
+                <p>The <code>Discovered hosts</code> area lists visible hosts with machine, version, endpoint, roles, hardware, workspace, and device information. Use this list to confirm that the host you intend to configure is the one currently visible on the network.</p>
+                <p><img src="medias/Infos tab 1.png" alt="Infos tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Devices Tab</h3>
+                <p><code>Devices</code> is where host-owned settings for detected boxes are reviewed and edited.</p>
+                <p>Use it when:</p>
+                <ul>
+                    <li>a box does not appear in <code>Controls</code>;</li>
+                    <li>a box is detected but the layout, serial, VID/PID, firmware, or commercial identity needs checking;</li>
+                    <li>rendered button orientation or background orientation needs to match the physical mounting;</li>
+                    <li>startup reset behavior needs to be changed;</li>
+                    <li>a persistent boot background should be written to the box;</li>
+                    <li>the per-device transport policy needs validation;</li>
+                    <li>host palette defaults need to be adjusted.</li>
+                </ul>
+                <p>Select a device from <code>Hosts &amp; Devices</code>. The detail panel then exposes:</p>
+                <ul>
+                    <li><code>Device identity</code>: VID/PID, layout, mapping summary, commercial identity, and firmware version;</li>
+                    <li><code>Device rotation</code>: separate rotation for buttons and background, when the device supports rendered buttons;</li>
+                    <li><code>Startup reset</code>: whether buttons and background are cleared to palette defaults during initialization;</li>
+                    <li><code>Startup background</code>: write a persistent boot background to the box ROM, applied immediately and surviving a reboot;</li>
+                    <li><code>Transport policy</code>: the selected communication policy for supported StreamDock families;</li>
+                    <li><code>Palette</code>: the per-device color palette, grouped by role.</li>
+                </ul>
+                <p>The detail header shows status chips (status, support stage, hardware profile, validation, GIF capability, transport policy) next to the device identity.</p>
+                <p>The <code>Palette</code> section groups the per-device colors by role: <code>Surfaces</code> (<code>Accent</code>, <code>Selection</code>, <code>Background</code>, <code>Panel</code>, <code>Border</code>), <code>Text</code> (<code>Text</code>, <code>Muted</code>, <code>Disabled</code>), <code>Title</code> (<code>Background</code>, <code>Text</code>), <code>Gauge &amp; bar</code> (<code>Normal</code>, <code>Warning</code>, <code>Critical</code>, <code>Track</code>), <code>Trigger</code> (<code>Warning</code>, <code>Alert</code>), and <code>States</code> (<code>Good</code>, <code>Info</code>, <code>Off</code>). Each color falls back to the built-in JIB default when left empty, and <code>Export</code> / <code>Import</code> save or restore the whole palette as a <code>.jib-palette</code> file.</p>
+                <p><img src="medias/Devices Tab 1.png" alt="Devices tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Hosts Tab</h3>
+                <p><code>Hosts</code> is the host discovery, host identity, node administration, and database management page.</p>
+                <p>Use it when:</p>
+                <ul>
+                    <li>you need to choose or inspect a discovered host;</li>
+                    <li>you need to verify the host endpoint, platform, node, or machine identity;</li>
+                    <li>host hardware capability summaries need checking;</li>
+                    <li>a host node should be forgotten, banned, unbanned, or reset;</li>
+                    <li>the host database needs to be downloaded or uploaded.</li>
+                </ul>
+                <p>The left side lists <code>Discovered hosts</code>. Selecting one opens the host detail panels.</p>
+                <p><code>Host identity</code> shows node, machine, platform, and endpoint.</p>
+                <p><code>Hardware</code> and <code>Routing model</code> summarize the preferred hardware, device-host node state, and binding providers.</p>
+                <p><code>Node administration</code> contains host-level actions:</p>
+                <ul>
+                    <li><code>Reset settings</code>;</li>
+                    <li><code>Forget node</code>;</li>
+                    <li><code>Ban node</code>;</li>
+                    <li><code>Unban node</code>.</li>
+                </ul>
+                <p>Use these actions deliberately. They affect the selected host node, not only the current Configurator window.</p>
+                <p><code>Database</code> shows the host database state, affected items that may need review or remapping, the database path, and the <code>Download database</code> / <code>Upload database</code> commands.</p>
+                <p><img src="medias/Hosts tab 1.png" alt="Hosts tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Plugins Tab</h3>
+                <p><code>Plugins</code> shows runtime plugin health, plugin telemetry, pressure status, and plugin-level settings.</p>
+                <p>Use it to:</p>
+                <ul>
+                    <li>refresh the visible plugin list;</li>
+                    <li>confirm whether a provider is loaded, degraded, or failed;</li>
+                    <li>review runtime pressure reported by plugins;</li>
+                    <li>edit global plugin settings;</li>
+                    <li>reset plugin settings when needed.</li>
+                </ul>
+                <p>The top runtime-pressure area summarizes whether any provider is reporting performance pressure.</p>
+                <p>Each plugin row can show:</p>
+                <ul>
+                    <li>display name and provider id;</li>
+                    <li>description;</li>
+                    <li>status detail;</li>
+                    <li>failure summary, when applicable;</li>
+                    <li>telemetry summary and telemetry detail;</li>
+                    <li>runtime-pressure hint.</li>
+                </ul>
+                <p>Editable settings appear inside the selected plugin area. Supported setting editors include text, endpoint, numeric, boolean, and secret-style fields. Secret values are write-only: the Configurator can report that a secret is configured without displaying the stored value.</p>
+                <p>Use <code>Reset all</code> only when you want to reset the visible plugin settings to their defaults.</p>
+                <p>Plugin configuration is global provider configuration. Concrete per-button behavior belongs in <code>Controls</code>, inside action cards and mapping metadata.</p>
+                <p><img src="medias/Plugins tab 1.png" alt="Plugins tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Datas Tab</h3>
+                <p><code>Datas</code> browses user-visible data exposed by plugins.</p>
+                <p>Use it when a plugin publishes useful values that can help you understand what data is available for displays, actions, or diagnostics.</p>
+                <p>The left side lists <code>Data providers</code>. Only plugins with user-visible data appear there. If no provider appears, either no connected plugin exposes user data or the plugin has not produced data yet.</p>
+                <p>After selecting a provider, use:</p>
+                <ul>
+                    <li><code>Search</code> to filter by subject, group, or value;</li>
+                    <li><code>Group</code> to narrow the visible data group;</li>
+                    <li>the <code>Subjects</code> list to choose the data subject you want to inspect;</li>
+                    <li>the item list to review labels, categories, values, and reset information.</li>
+                </ul>
+                <p>If the page says no plugin data matches the filters, clear the filters first. If it says to use the plugin and refresh the page, run the source application or plugin workflow that produces the data, then refresh.</p>
+                <p><img src="medias/Datas tab 1.png" alt="Datas tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Settings Tab</h3>
+                <p><code>Settings</code> contains host-level runtime tuning.</p>
+                <p>Use it when you need to change rendering quality, rendering cadence, brightness defaults, screensaver behavior, or host network reachability.</p>
+                <p><code>Quality</code> contains:</p>
+                <ul>
+                    <li><code>Render quality</code>: normal, high, or very high output quality;</li>
+                    <li><code>Parallel hardware renders</code>: automatic or manual host-side parallel rendering;</li>
+                    <li><code>Preferred Box Render FPS</code>: nominal render rate sent to boxes;</li>
+                    <li><code>Preview FPS</code>: refresh rate of the device preview in <code>Controls</code>.</li>
+                </ul>
+                <p>Higher quality and higher FPS can increase CPU usage. If runtime pressure appears in <code>Plugins</code> or <code>Debug</code>, lower these values before changing mappings.</p>
+                <p><code>Brightness</code> contains global brightness defaults for buttons and LEDs.</p>
+                <p><code>Screensaver</code> dims buttons and LEDs after inactivity. It can be disabled entirely, or configured with:</p>
+                <ul>
+                    <li>button dim percentage;</li>
+                    <li>LED dim percentage;</li>
+                    <li>idle timeout.</li>
+                </ul>
+                <p><code>Network access</code> controls whether the host accepts LAN connections. When <code>Allow LAN connections</code> is disabled, the host listens on <code>127.0.0.1</code> only. Enable it only when another machine must connect to the host.</p>
+                <p><img src="medias/Settings tab 1.png" alt="Settings tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Transports Tab</h3>
+                <p><code>Transports</code> monitors live transport connections exposed by providers.</p>
+                <p>Use it when you need to confirm that a provider transport is started, connected, receiving messages, or reporting errors.</p>
+                <p>Each transport row can show:</p>
+                <ul>
+                    <li>provider display name;</li>
+                    <li>provider id;</li>
+                    <li>endpoint;</li>
+                    <li>bytes received;</li>
+                    <li>messages received;</li>
+                    <li>connected time;</li>
+                    <li>last message time;</li>
+                    <li>last error, when present.</li>
+                </ul>
+                <p>Use <code>Start</code> and <code>Stop</code> to control a transport when the provider exposes those commands. If a transport shows no messages while the related plugin is expected to be active, check the source application and the plugin settings first.</p>
+                <p><img src="medias/Transports tab 1.png" alt="Transports tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Debug Tab</h3>
+                <p><code>Debug</code> is the main support and diagnostics page.</p>
+                <p>Use it when hardware behavior, rendering, input routing, pressure, or host state needs investigation.</p>
+                <p>Start with <code>Target</code>: select the device whose debug output should be inspected.</p>
+                <p><code>Diagnostics</code> includes:</p>
+                <ul>
+                    <li><code>Render route</code>: shows how the selected device is expected to render;</li>
+                    <li><code>Pressure diagnostics</code>: shows current or recent structured pressure signals;</li>
+                    <li><code>Diagnostic report</code>: runs a guided diagnosis and can export a support bundle;</li>
+                    <li><code>Advanced diagnostic tools</code>: copy/export commands and log-folder access;</li>
+                    <li><code>USB probe</code>: USB interface and compatibility inspection;</li>
+                    <li><code>Box diagnostics</code>: live validation for button order, LCD routing, touch-button LCD routing, brightness, and LED behavior;</li>
+                    <li><code>Diagnostic test pattern</code>: temporarily pushes a selected test pattern to the selected box.</li>
+                </ul>
+                <p>The <code>Log</code> section toggles verbose diagnostic categories:</p>
+                <ul>
+                    <li>hardware LED trace;</li>
+                    <li>UI / mapping diagnostics;</li>
+                    <li>Controls preview diagnostics;</li>
+                    <li>hardware input diagnostics.</li>
+                </ul>
+                <p>The <code>Host</code> section contains <code>Reset all</code>. This clears DeviceHost persisted settings, runtime mappings, provider cache, and active debug state, then restarts detection and initialization. Use it only when a full host-side reset is intended.</p>
+                <p><img src="medias/Debug tab 1.png" alt="Debug tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Logs Tab</h3>
+                <p><code>Logs</code> displays log output from the connected host.</p>
+                <p>Use it to review recent runtime activity without leaving the Configurator.</p>
+                <p>Available tools:</p>
+                <ul>
+                    <li><code>Search logs</code>: search visible log text;</li>
+                    <li><code>Filter</code>: show only matching lines instead of only navigating search matches;</li>
+                    <li><code>Wrap</code>: wrap long lines;</li>
+                    <li><code>Live</code>: keep the log view following live output;</li>
+                    <li><code>Previous</code> and <code>Next</code>: move through search matches;</li>
+                    <li><code>Copy visible logs</code>: copy the currently visible log text.</li>
+                </ul>
+                <p>When diagnosing a problem, reproduce the issue once, then use search terms related to the affected area, such as <code>mapping</code>, <code>preview</code>, <code>LED</code>, <code>input</code>, <code>transport</code>, or the plugin name.</p>
+                <p><img src="medias/Logs tab 1.png" alt="Logs tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>About Tab</h3>
+                <p><code>About</code> contains project information and links.</p>
+                <p>It summarizes what JIB is, shows the current Configurator build version, credits the author, and provides external links:</p>
+                <ul>
+                    <li><code>Open website</code>;</li>
+                    <li><code>Open GitHub</code>.</li>
+                </ul>
+                <p>It also includes a greetings section for alpha testers.</p>
+                <p>Use this page when you need the installed build version or project links.</p>
+                <p><img src="medias/About tab 1.png" alt="About tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h3>Options Tab</h3>
+                <p><code>Options</code> contains local Configurator preferences. These settings affect the desktop app behavior, not the host mappings.</p>
+                <p><code>Appearance</code> controls the application theme:</p>
+                <ul>
+                    <li><code>Auto</code>: follows the Windows app theme;</li>
+                    <li><code>Light</code>: forces the light Configurator palette;</li>
+                    <li><code>Dark</code>: forces the dark Configurator palette.</li>
+                </ul>
+                <p><code>Window and tray</code> controls close behavior.</p>
+                <p>When <code>Close to tray</code> is enabled, clicking the window close button hides the Configurator and keeps it running in the notification area. When disabled, closing the window exits the Configurator fully.</p>
+                <p><img src="medias/Options tab 1.png" alt="Options tab overview" style="cursor:zoom-in; border-radius:12px; border:1px solid var(--line);" onclick="openLightbox(this.src)" /></p>
+
+                <h2>Quick Troubleshooting</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symptom</th>
+                                <th>Likely cause</th>
+                                <th>What to do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>Controls</code> is disabled</td><td>The Configurator is not connected to a host</td><td>Connect to a host from the header (see Connecting to a Host).</td></tr>
+                            <tr><td>No device appears in <code>Device</code></td><td>No supported box is detected by the host</td><td>Check the <code>Devices</code> tab, the USB connection, and the host process.</td></tr>
+                            <tr><td>Canvas is blank or stuck on loading</td><td>Workspace or hardware state is stale</td><td>Use <code>Refresh</code>, then verify the selected device is still connected.</td></tr>
+                            <tr><td><code>Events</code> is blocked</td><td>No editable control is selected, or the control does not support mappings</td><td>Select a compatible control in the <code>Canvas</code>.</td></tr>
+                            <tr><td><code>Actions</code> is blocked</td><td>No event slot exists or no event slot is selected</td><td>Create or select an event slot first.</td></tr>
+                            <tr><td>A knob mapping cannot be edited</td><td>The knob is set to <code>Button selected</code> behavior</td><td>Switch <code>Knob behavior</code> back to <code>Autonomous</code>.</td></tr>
+                            <tr><td>A display source has fewer options than expected</td><td>The selected control or hardware family has limited render capabilities</td><td>Try another control family or review the visible display-section guidance.</td></tr>
+                            <tr><td><code>Swipe left</code> or <code>Swipe right</code> does not change touch page</td><td>Swipe selection edits the swipe mapping; it is not touch-page navigation</td><td>Use the touch-page selector or a runtime navigation action.</td></tr>
+                            <tr><td>A saved change does not appear on hardware</td><td>Wrong device/page selected, stale preview, or host/device state lag</td><td>Refresh, verify the device and page, then check <code>Infos</code> and <code>Devices</code>.</td></tr>
+                            <tr><td>Drag-and-drop from Explorer does not work</td><td>Configurator may be running elevated while Explorer is not</td><td>Run Configurator normally, not as Administrator.</td></tr>
+                            <tr><td>Import does not apply</td><td>The target control structure does not match the exported mapping</td><td>Verify device, scene, page, touch page, folder, and control context before importing.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Glossary</h2>
+                <p><strong>Action</strong>: an operation executed when an event fires. Examples include keyboard shortcut, program launch, page navigation, wait, mouse action, HTTP request, or plugin action.</p>
+                <p><strong>Canvas</strong>: the central visual preview of the selected device. It is used to select controls and as the main drag-and-drop target.</p>
+                <p><strong>Control</strong>: a physical or logical input/output element on a device, such as a button, knob, touch area, display surface, or swipe control.</p>
+                <p><strong>Display</strong>: the runtime or static visual content shown by a rendered control.</p>
+                <p><strong>Event</strong>: a trigger slot owned by a control. Actions are stored inside events.</p>
+                <p><strong>Folder</strong>: a local sub-page entered from a page. Folders are navigation destinations inside the selected page structure.</p>
+                <p><strong>Mapping</strong>: the saved relationship between a control event and one or more actions, plus related control display or behavior settings.</p>
+                <p><strong>Page</strong>: a main layout page inside a scene, scoped to a single box.</p>
+                <p><strong>Palette</strong>: the right-side browser for display sources, event slots, and actions.</p>
+                <p><strong>Scene</strong>: a top-level layout owned by a single box. Each box has its own scenes, which can be selected manually or activated automatically by process rules.</p>
+                <p><strong>Swipe</strong>: a logical control with two event slots (<code>Swipe left</code> = <code>Decrement</code>, <code>Swipe right</code> = <code>Increment</code>). The swipe mapping is per touch page.</p>
+                <p><strong>Touch page</strong>: an alternate touch surface attached to the selected main page. Touch pages are not folders.</p>
+                <p><strong>Workspace</strong>: the current host-side editing state, including selected device, scene, page, touch page, context, mappings, and provider data.</p>
+
+            </article>
+        </div>
+    </main>
+
+    <footer class="wrap footer" id="footer"></footer>
+
+    <button class="backtop" type="button" aria-label="Back to top">&uarr;</button>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+        <button class="lightbox-close" type="button" id="lightboxClose" aria-label="Close image preview">&times;</button>
+        <img id="lightboxImage" src="" alt="Zoomed preview" />
+    </div>
+    <script src="./data.js" defer></script>
+    <script src="./app.js" defer></script>
+</body>
+</html>

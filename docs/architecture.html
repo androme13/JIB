@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="JIB architecture: how the host, Configurator, and SimHub plugin communicate over TCP and UDP, the ports they use, and how to run them on separate machines." />
+    <meta property="og:title" content="JIB - Architecture" />
+    <meta property="og:description" content="How the JIB host, Configurator, and SimHub plugin communicate over TCP and UDP, and how to run them on separate machines." />
+    <meta property="og:image" content="./logo.png" />
+    <meta name="theme-color" content="#0f1115" />
+    <title>JIB - Architecture</title>
+    <link rel="icon" href="./icon.png" sizes="any" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="architecture">
+    <header class="topbar" id="topbar"></header>
+
+    <main id="top" class="wrap">
+        <div class="docs-hero">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="sep">&rsaquo;</span>
+                <span>Architecture</span>
+            </nav>
+            <div class="card">
+                <div class="eyebrow">Documentation</div>
+                <h1 style="margin-bottom:10px;">Architecture &amp; networking</h1>
+                <p class="lead" style="max-width:900px;">
+                    JIB is three independent processes connected over TCP. This page explains the topology, the ports, how discovery works, and how to run the host, the Configurator, and the SimHub plugin on separate machines.
+                </p>
+            </div>
+        </div>
+
+        <div class="docs-layout">
+            <aside class="toc" id="toc" aria-label="Table of contents"></aside>
+            <article class="docs-prose card" id="guideContent">
+
+                <h2>Components</h2>
+                <ul>
+                    <li><strong>JIB.Service</strong> &mdash; the background Windows host. It owns the USB hardware, loads plugins, renders frames, and serves the IPC servers.</li>
+                    <li><strong>JIB.Configurator</strong> &mdash; the WinUI 3 desktop app for visual editing. It has no shared DLL with the host; it talks over TCP.</li>
+                    <li><strong>SimHub.JIB.Plugin</strong> &mdash; runs inside SimHub.exe and streams telemetry to the host. The one plugin that lives outside the host process.</li>
+                    <li><strong>StreamDockNative.dll</strong> &mdash; a C++ passthrough layer for USB HID and SDK communication. It does no rendering.</li>
+                    <li><strong>Internal plugins</strong> &mdash; ten providers loaded from <code>Plugins/</code>: SimHub, Media, Camera, Keyboard, Mouse, vJoy, OBS Studio, HTTP, System Commands, System Monitor.</li>
+                </ul>
+
+                <h2>Topology</h2>
+                <p>The host is the hub. The Configurator and the SimHub plugin are both clients of the host, and neither talks to the other directly.</p>
+                <div class="topology">
+                    <div class="topology-node">
+                        <h4>SimHub plugin</h4>
+                        <span class="role">Inside SimHub.exe, on the sim rig PC</span>
+                        <div class="ports">
+                            <div class="port"><strong>Out:</strong> telemetry over TCP 16555</div>
+                        </div>
+                    </div>
+                    <div class="topology-edge">
+                        <span class="arrow">&rarr;</span>
+                        <span class="port-tag">TCP 16555</span>
+                    </div>
+                    <div class="topology-node">
+                        <h4>JIB.Service</h4>
+                        <span class="role">Windows host, owns the USB boxes</span>
+                        <div class="ports">
+                            <div class="port"><strong>In:</strong> Configurator 16550, SimHub 16555</div>
+                            <div class="port"><strong>UDP:</strong> discovery 16551</div>
+                        </div>
+                    </div>
+                    <div class="topology-edge">
+                        <span class="arrow">&rarr;</span>
+                        <span class="port-tag">TCP 16550</span>
+                    </div>
+                    <div class="topology-node">
+                        <h4>JIB.Configurator</h4>
+                        <span class="role">WinUI 3 desktop app, anywhere on the LAN</span>
+                        <div class="ports">
+                            <div class="port"><strong>Out:</strong> edits the host over TCP 16550</div>
+                        </div>
+                    </div>
+                </div>
+                <p>Because each part is a standalone process that only requires a TCP route to the host, the three processes can run on three different machines. There is no shared DLL and no shared filesystem requirement between them.</p>
+
+                <h2>Ports and protocols</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th>Protocol</th>
+                                <th>Path</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>16550</code></td>
+                                <td>TCP, 4-byte length-prefixed JSON</td>
+                                <td>Configurator &harr; Host</td>
+                                <td>Primary IPC. One request per connection. Host events are pushed on <code>16551</code>-style event port (loopback).</td>
+                            </tr>
+                            <tr>
+                                <td><code>16551</code></td>
+                                <td>UDP</td>
+                                <td>Discovery</td>
+                                <td>Active request/reply plus a periodic broadcast beacon every 2 s.</td>
+                            </tr>
+                            <tr>
+                                <td><code>16555</code></td>
+                                <td>TCP, line-delimited JSON</td>
+                                <td>SimHub plugin &rarr; Host</td>
+                                <td>Persistent connection with handshake and a 5 s ping/pong heartbeat.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The Configurator and the host exchange a JSON envelope with <code>ProtocolVersion</code>, <code>MessageType</code>, and <code>CorrelationId</code>; responses add <code>Success</code>, <code>ErrorCode</code>, and <code>ErrorMessage</code>. The SimHub plugin uses raw line-delimited JSON with a handshake of <code>{"Handshake":"JIB.SimHub.Plugin","Version":"1.0"}</code>.</p>
+
+                <h2>Discovery</h2>
+                <p>The Configurator finds hosts in three ways:</p>
+                <ul>
+                    <li><strong>Local fast-path</strong> &mdash; if <code>%TEMP%\JIB.Service.port</code> exists (JSON <code>{"Port":16550}</code>), the Configurator tries <code>127.0.0.1:&lt;port&gt;</code> directly. Deterministic and network-independent.</li>
+                    <li><strong>UDP request/reply</strong> &mdash; the Configurator broadcasts a <code>DiscoverRequest</code> on port <code>16551</code> and collects unicast replies for 1.5 s, deduplicated by <code>host:port</code>.</li>
+                    <li><strong>Periodic beacon</strong> &mdash; the host also broadcasts <code>{"Service":"JIB.DeviceHost","Host":"&lt;LAN-IP&gt;","Port":16550}</code> every 2 s as a passive complement.</li>
+                </ul>
+                <p>The host picks its best IPv4 LAN address by scanning active interfaces (prioritizing those with a gateway, excluding tunnels and loopback). <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, and <code>192.168.0.0/16</code> are all handled uniformly.</p>
+
+                <h2>Connecting across the LAN</h2>
+                <p>For a Configurator or a SimHub plugin to reach a host on another machine, the host must be reachable:</p>
+                <ol>
+                    <li>Open <code>Settings</code> in the Configurator and enable <code>Allow LAN connections</code> under <code>Network access</code>. When disabled, the host listens on <code>127.0.0.1</code> only.</li>
+                    <li>Make sure the Windows firewall allows inbound connections on the relevant TCP ports (<code>16550</code>, <code>16555</code>) and UDP <code>16551</code> for discovery.</li>
+                    <li>Connect the Configurator to the host's LAN address, e.g. <code>192.168.1.20:16550</code>, or pick it from the discovered endpoints list.</li>
+                </ol>
+
+                <h2>Multi-machine scenarios</h2>
+                <h3>Everything on one PC</h3>
+                <p>The default and simplest setup. The host, the Configurator, and SimHub all run on the same machine; the Configurator connects to <code>127.0.0.1:16550</code>.</p>
+                <h3>Host on the rig, Configurator at the desk</h3>
+                <p>Run the host on the PC that has the USB boxes (or a small machine bolted to the rig), enable LAN access, and edit from a desktop or laptop on the same network.</p>
+                <h3>SimHub on the racing PC, host elsewhere</h3>
+                <p>Because the SimHub plugin streams telemetry over TCP <code>16555</code>, SimHub can run on the dedicated racing PC while the host that owns the hardware lives on another machine. Point the SimHub plugin at the host's address.</p>
+                <h3>Headless host</h3>
+                <p>The host can run without a Configurator attached. In alpha, prefer running it in console mode (<code>Host\JIB.Service.exe</code>) rather than as a Windows service, to keep updates, logs, and resets simple.</p>
+
+                <h2>Rendering pipeline</h2>
+                <p>JIB renders with SkiaSharp on the CPU (no GPU), so it works on machines without a discrete GPU:</p>
+                <pre><code>Payload &rarr; Scene &rarr; SkiaSharp raster &rarr; JPEG/PNG &rarr; device USB</code></pre>
+                <p>The host uses a single renderer shared between Configurator previews and device frames, plus a shared frame cache, to keep preview and hardware output in sync. An autonomous render loop pre-renders button frames around 20 FPS and uses delta hashing to skip re-rendering unchanged frames.</p>
+
+                <h2>Feature transports</h2>
+                <p>How a device feature is driven &mdash; via the vendor SDK or directly by JIB (native) &mdash; is decided per feature and per device family, not by a single global switch:</p>
+                <ul>
+                    <li><strong>SDK</strong> &mdash; driven through the vendor SDK or transport.</li>
+                    <li><strong>Native</strong> &mdash; driven directly by JIB, typically raw HID or a vendor protocol JIB implements itself.</li>
+                    <li><strong>Mixed</strong> &mdash; depends on the model or sub-case.</li>
+                    <li><strong>Unsupported</strong> &mdash; not available for that device.</li>
+                </ul>
+                <p>Features tracked this way include <code>Render</code>, <code>Brightness</code>, <code>Led</code>, <code>Input</code>, <code>DeviceConfig</code>, <code>KeyGif</code>, <code>BackgroundGif</code>, <code>BootVideo</code>, and <code>Vibration</code>. The user-facing policy stays simple: <code>SDK only</code> or <code>Hybrid</code> (switch to the native stack only when the runtime judges it complete for the required features).</p>
+
+                <h2>Dispatch modes</h2>
+                <p>Every action resolves to one of three dispatch modes, in this order of priority: user override on the card, the mode recommended by the plugin, then a host fallback by target kind.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Behaviour</th>
+                                <th>Use for</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>Auto</code></td><td>Uses the plugin recommendation if present, otherwise the host fallback.</td><td>General use.</td></tr>
+                            <tr><td><code>Simple</code> (pulse)</td><td>Emits a single one-shot pulse; no separate release.</td><td>Page navigation, mute, system commands.</td></tr>
+                            <tr><td><code>Press / Release</code></td><td>Emits <code>Press</code> on press, then <code>Release</code> on release.</td><td>Keyboard shortcuts, vJoy holds, push-to-talk.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The action card shows an <code>Execution</code> selector listing <code>Auto</code> plus only the modes the action actually supports.</p>
+
+            </article>
+        </div>
+    </main>
+
+    <footer class="wrap footer" id="footer"></footer>
+
+    <button class="backtop" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="./data.js" defer></script>
+    <script src="./app.js" defer></script>
+</body>
+</html>
