@@ -145,7 +145,7 @@
                 <h2>Rendering pipeline</h2>
                 <p>JIB renders with SkiaSharp on the CPU (no GPU), so it works on machines without a discrete GPU:</p>
                 <pre><code>Payload &rarr; Scene &rarr; SkiaSharp raster &rarr; JPEG/PNG &rarr; device USB</code></pre>
-                <p>The host uses a single renderer shared between Configurator previews and device frames, plus a shared frame cache, to keep preview and hardware output in sync. An autonomous render loop pre-renders button frames around 20 FPS and uses delta hashing to skip re-rendering unchanged frames.</p>
+                <p>The host uses a single renderer shared between Configurator previews and device frames, plus a shared frame cache, to keep preview and hardware output in sync. An autonomous render loop pre-renders button frames (configurable up to 60 FPS, with delta hashing to skip re-rendering unchanged frames).</p>
 
                 <h2>Feature transports</h2>
                 <p>How a device feature is driven &mdash; via the vendor SDK or directly by JIB (native) &mdash; is decided per feature and per device family, not by a single global switch:</p>
