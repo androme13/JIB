@@ -86,6 +86,7 @@ const compatibility = [
     ['Redragon', 'Skyrider SS-551', 'Catalog matched', 'SDN3', 'Known USB rebrand family'],
     ['MiraBox', '293 V2', 'Catalog matched', 'SD293', '5x3 keys'],
     ['MiraBox', '293 V3', 'Needs device validation', 'SD293', 'Same 293-class family; exact revision needs owner validation'],
+    ['upHere', '293V3', 'Needs device validation', 'SD293', '293V3 clone, VID:PID 1200:2012; cataloged, awaiting real-device validation'],
     ['MiraBox', '293S / HSV293SV3', 'Catalog matched', 'SD293S', '5x3 keys, 3 screens, key GIF'],
     ['FHOOU', '293S', 'Catalog matched', 'SD293S', 'Shared VID:PID 5548:6670; HID manufacturer branding is preserved.'],
     ['Ajazz', 'AKP153 / AKP153E / AKP153R', 'Catalog matched', 'SD293S', 'Known USB rebrand family'],
