@@ -125,11 +125,18 @@
         document.body.classList.remove('locked');
     }
 
+    function isVideo(src) {
+        return /\.(mp4|webm|ogg|mov)$/i.test(src);
+    }
+
     function renderGallery() {
         const [src, title] = media[activeMedia];
+        const stage = isVideo(src)
+            ? `<video class="gallery-video" src="${escapeHtml(src)}" controls playsinline preload="metadata"></video>`
+            : `<img class="gallery-image" src="${escapeHtml(src)}" alt="${escapeHtml(title)}" onclick="openLightbox(this.src)" />`;
         $('#mediaGallery').innerHTML = `
             <div class="gallery-stage">
-                <img class="gallery-image" src="${escapeHtml(src)}" alt="${escapeHtml(title)}" onclick="openLightbox(this.src)" />
+                ${stage}
                 <button class="gallery-arrow gallery-prev" type="button" aria-label="Previous preview" onclick="showMedia(${activeMedia - 1})">&lsaquo;</button>
                 <button class="gallery-arrow gallery-next" type="button" aria-label="Next preview" onclick="showMedia(${activeMedia + 1})">&rsaquo;</button>
                 <div class="gallery-caption">
@@ -140,7 +147,9 @@
             <div class="gallery-thumbs">
                 ${media.map(([thumb, thumbTitle], index) => `
                     <button class="gallery-thumb" type="button" aria-label="Show ${escapeHtml(thumbTitle)}" aria-current="${index === activeMedia}" onclick="showMedia(${index})">
-                        <img src="${escapeHtml(thumb)}" alt="${escapeHtml(thumbTitle)}" loading="lazy" />
+                        ${isVideo(thumb)
+                            ? `<span class="gallery-video-thumb"><video src="${escapeHtml(thumb)}" muted playsinline preload="metadata"></video></span>`
+                            : `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(thumbTitle)}" loading="lazy" />`}
                     </button>
                 `).join('')}
             </div>

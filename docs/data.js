@@ -74,7 +74,8 @@ const media = [
     ['medias/About tab 1.png', 'About'],
     ['medias/Simhub N3 1.png', 'SimHub on MiraBox N3'],
     ['medias/Simhub N4PRO 1.png', 'SimHub on MiraBox N4 Pro'],
-    ['medias/Simhub N4PRO 2.png', 'SimHub on MiraBox N4 Pro detail']
+    ['medias/Simhub N4PRO 2.png', 'SimHub on MiraBox N4 Pro detail'],
+    ['medias/Simhub N4PRO.mp4', 'SimHub on MiraBox N4 Pro — video']
 ];
 
 const compatibility = [
